@@ -1,6 +1,7 @@
 library(FactoMineR)
 library("RColorBrewer")
 library("dplyr")
+library(pvclust)
 source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R")
 setwd ('~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis')
 source("sw_input_files/duplex_tools.R")
@@ -20,9 +21,9 @@ for (i in 1:dim(no)[1]) {
     no2[i,] = no[i,,]
     mafsP2[i,]  = mafsP1[i,,]
 }
-res.pca = PCA(no2, scale.unit=TRUE, ncp=5, graph=T) 
+#res.pca = PCA(no2, scale.unit=TRUE, ncp=5, graph=T) 
 res.pca = PCA(mafsP2, scale.unit=TRUE, ncp=5, graph=T) 
-
+dim(mafsP2) #45 72376
 # QIAGEN healthy samples ############################################################################################
 pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
 pon_hg19 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/call/references/200419_novaseq-xgen-sporacrc-pon.RDS") 
@@ -39,14 +40,18 @@ for (i in 1:dim(countsQ1)[1]) {
   noQ[i,] = countsQ1[i,,]
   mafsQ2[i,]  = mafsQ1[i,,]
 }
-res.pca = PCA(noQ, scale.unit=TRUE, ncp=5, graph=T) 
+#res.pca = PCA(noQ, scale.unit=TRUE, ncp=5, graph=T) 
 res.pca = PCA(mafsQ2, scale.unit=TRUE, ncp=5, graph=T) 
+dim(mafsQ2) #24 72376
 ########################################################
 
-df<-scale(mafsQ2)
+df<-scale(mafsP2[,1:5000])
 col <- colorRampPalette(brewer.pal(11, "RdYlBu"))(256)
 heatmap(df, scale = "none", col =  col)
 
+aux <- t(mafsQ2[,1:5])
+hc <- hclust(aux)                # apply hirarchical clustering 
+plot(hc) 
 
-col <- colorRampPalette(brewer.pal(11, "RdYlBu"))(256)
-heatmap(df, scale = "none", col =  col)
+result <- pvclust(t(mafsP2[,1:5000]), method.dist="cor", method.hclust="average", nboot=1000, parallel=TRUE)
+plot(result)
