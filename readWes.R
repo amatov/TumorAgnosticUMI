@@ -62,8 +62,8 @@ wQ = array(0, dim=c(dim(countsW)[1],dim(countsW)[2],dim(countsW)[3]))
 scQ <- vector()
 counter <- 1
 for (i in 1:dim(mafsW)[1]) {
-  i=1
-  j= 95
+  #i=1
+  #j= 95
   for (j in 1:length(pts)) {  
     if (grepl(as.character(pts[j]), as.character(pileupsIw[preop_i][i]))) {# TRUE
       #print(i)
@@ -80,13 +80,6 @@ for (i in 1:dim(mafsW)[1]) {
       scQ[j] <- sum(wQ)/length(mu)
     }
 }
-}
-for (i in 1:length(m)) {
-  i = 3
-  # index of mutations in the list
-  which(sitemut == m[i])
-  ww[i,,] <- mafsQ1[i,,][mafsQ1[i,,]<= 0.1]/v1/sum(mafsQ1[i,,]<= 0.1)*prior2
-  sw[i]<-sum(ww[i,,])
 }
 #######################################################################
 r1<- -3
