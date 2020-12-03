@@ -1,6 +1,6 @@
 library("dplyr")
-source("sw_input_files/duplex_tools.R")
-pon_obj2 <- readRDS("sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
+source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/duplex_tools.R")
+pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
 cou <- pon_obj2[["pon"]]
 co <- cou[,,1:4]+cou[,,6:9]
 vo<-apply(co,2:3,var) # variance of the counts of each position based on PON
