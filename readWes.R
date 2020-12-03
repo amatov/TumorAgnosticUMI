@@ -19,11 +19,13 @@ sitemut <- t(apply(pon_obj2$coordinates, 1, function(x){
          paste(x[3] ,c("A", "T", "C", "G"), sep = "/"),
          sep = "")}))
 # IMPROVE WES data ###################################################################################
-wes <- read.table("~/genomedk/matovanalysis/umiseq_analysis/201123_wes-spora-mutations-improve.csv", header = TRUE) # HG38
+wes <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/201123_wes-spora-mutations-improve.csv", header = TRUE) # HG38
+#wes <- read.table("~/genomedk/matovanalysis/umiseq_analysis/201123_wes-spora-mutations-improve.csv", header = TRUE) # HG38
 pts <- unique(wes$pt_id)
 #sapply(as.character(pts), function(x) grep(x, pileupsIw[preop_i])) # 141 of 179
 #wes_id <- intersect(ItW$pt_id, pts)
-ItW <- read.table("~/genomedk/matovanalysis/umiseq_analysis/IMPROVEptList",header = TRUE)
+ItW <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/IMPROVEptList",header = TRUE)
+#ItW <- read.table("~/genomedk/matovanalysis/umiseq_analysis/IMPROVEptList",header = TRUE)
 wes_id <- ItW$pt_id %in% pts
 #ItW$index <- sapply(as.character(ItW$library_id), function(x) grep(x, pileupsIw)) # 141 of 179
 preI <- (ItW$op_time_cat == -1)&wes_id
