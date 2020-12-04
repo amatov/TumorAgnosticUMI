@@ -15,7 +15,7 @@ for (i in 1:dim(pon_counts)[1]) {
 no <- no1[,,1:4]+no1[,,6:9]
 #########Gray band (variance) ############################
 covP <- rowSums(no, dims = 2)
-meaP<-apply(covP,2,mean) # variance of each position based on PON
+meaP<-apply(covP,2,mean) 
 noP1 <- t(rbind(covP,meaP))
 noP2 <- noP1[order(noP1[,(dim(pon_counts)[1]+1)],decreasing=TRUE),]
 noP3 <- noP2[,1:dim(pon_counts)[1]]# the sorted coverage for each position in the 45 PONs
