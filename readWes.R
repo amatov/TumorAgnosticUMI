@@ -42,12 +42,9 @@ ww = array(0, dim=c(dim(co)[1],dim(co)[2],dim(co)[3]))
 sw<- vector()
 wQ = array(0, dim=c(dim(countsW)[1],dim(countsW)[2],dim(countsW)[3]))
 scQ <- vector()
-counter <- 1
 for (i in 1:dim(mafsW)[1]) {
   for (j in 1:length(pts)) {  
     if (grepl(as.character(pts[j]), as.character(pileupsIw[preop_i][i]))) {
-      print(counter)
-      counter<- counter+1
       wesP <- wes[wes==pts[j],]
       mu <- wesP$sitemut_hg38
       for (k in 1:length(mu)) {
@@ -57,7 +54,7 @@ for (i in 1:dim(mafsW)[1]) {
       }
       scQ[j] <- sum(wQ)/length(mu)
     }
-}
+  }
 }
 ###############plot mutation score########################################################
 r1<- -3
