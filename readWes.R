@@ -18,8 +18,7 @@ wes <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umis
 pts <- unique(wes$pt_id)
 ItW <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/IMPROVEptList",header = TRUE)
 wes_id <- ItW$pt_id %in% pts
-preI <- (ItW$op_time_cat == -1)&wes_id
-preop_i <- ItW[preI, "index"] # 57
+preop_i <- ItW[(ItW$op_time_cat == -1)&wes_id, "index"] # 57
 posop14_i <- ItW[ (ItW$op_time_cat == 2)&wes_id, "index"] # 42
 posop30_i <- ItW[ (ItW$op_time_cat == 30)&wes_id, "index"] # 42
 ###################################################################################################
