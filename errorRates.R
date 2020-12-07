@@ -1,5 +1,12 @@
 source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R") #1/0 list
+f2 <- function(a, M, S){
+  #Get indeces instead of number of sites
+  which(apply(a, c(1, 2), function(x)sum(sum(x >= M, na.rm=T) >= S))>0)
+}
 
+#For one comination 
+S =5; M=0.01; a = mafs
+indP <- f2(mafs, M, S)
 # 45 Subjects of the Control Panel of Normal PON ####################################################################
 pon_obj2 <- readRDS("sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
 pon_counts <- pon_obj2[["pon"]]
