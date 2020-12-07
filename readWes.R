@@ -71,7 +71,7 @@ plot(log2(sc111Q), ylim=range(c(r1,r2)), col="blue", pch = 18)
 #sapply(as.character(pts), function(x) grep(x, pileupsIw[preop_i])) 
 #wes_id <- intersect(ItW$pt_id, pts)
 #ItW$index <- sapply(as.character(ItW$library_id), function(x) grep(x, pileupsIw)) 
-########## mutations for the individual pt
+########## mutations for PON1 subject ################
 wesP <- wes[wes==pts[1],]
 m1 <- wesP$sitemut_hg38[1]
 #chr17:7675235_T/C
