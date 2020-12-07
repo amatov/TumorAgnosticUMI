@@ -14,14 +14,6 @@ vo1[vo==0]=v0
 # COSMIC prior ##########################################################################################
 prior1 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/180903_prior.RDS")
 prior11 <- prior1[,1:4]
-# IMPROVE WES data ###################################################################################
-wes <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/201123_wes-spora-mutations-improve.csv", header = TRUE) # HG38
-pts <- unique(wes$pt_id)
-ItW <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/IMPROVEptList",header = TRUE)
-wes_id <- ItW$pt_id %in% pts
-preop_i <- ItW[(ItW$op_time_cat == -1)&wes_id, "index"] # 57
-posop14_i <- ItW[ (ItW$op_time_cat == 2)&wes_id, "index"] # 42
-posop30_i <- ItW[ (ItW$op_time_cat == 30)&wes_id, "index"] # 42
 # IMPROVE plasma data ##################################################################################################
 pileupsIw <- list.files("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/N227", recursive = T, full.names = T, pattern = "bait.pileup")
 source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/duplex_tools.R")
@@ -32,10 +24,18 @@ auxM <- rowSums(countsW, dims = 2)
 for (i in 1:dim(countsW)[1]) {
   mafsW[i,,] <- countsW[i,,]  /auxM[i,]
 }
+# IMPROVE WES data ###################################################################################
+wes <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/201123_wes-spora-mutations-improve.csv", header = TRUE) # HG38
+pts <- unique(wes$pt_id)
+ItW <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/IMPROVEptList",header = TRUE)
+ItW$index <- sapply(as.character(ItW$library_id), function(x) grep(x, pileupsIw))  
+wes_id <- ItW$pt_id %in% pts
+preop_i <- ItW[(ItW$op_time_cat == -1)&wes_id, "index"] # 57
+posop14_i <- ItW[ (ItW$op_time_cat == 2)&wes_id, "index"] # 42
+posop30_i <- ItW[ (ItW$op_time_cat == 30)&wes_id, "index"] # 42
+#################################################################
 ww = array(0, dim=c(dim(co)[1],dim(co)[2],dim(co)[3]))
 sw<- vector()
-wQ = array(0, dim=c(dim(countsW)[1],dim(countsW)[2],dim(countsW)[3]))
-scQ <- vector()
 for (i in 1:dim(mafsW)[1]) {
   for (j in 1:length(pts)) {  
     if (grepl(as.character(pts[j]), as.character(pileupsIw[preop_i][i]))) {
@@ -44,9 +44,9 @@ for (i in 1:dim(mafsW)[1]) {
       for (k in 1:length(mu)) {
         auxW <- mafsW[i,,]
         iW <- sitemut == mu[k] 
-        wQ[k] <- auxW[iW]/vo1[iW]*prior11[iW]
+        ww[k] <- auxW[iW]/vo1[iW]*prior11[iW]
       }
-      scQ[j] <- sum(wQ)/length(mu)
+      sw[j] <- sum(ww)/length(mu)
     }
   }
 }
