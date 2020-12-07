@@ -13,7 +13,6 @@ prior11 <- prior1[,1:4]
 maW = array(0, dim=c(dim(co)[1],dim(co)[2],dim(co)[3]))
 rS <- rowSums(co, dims = 2) 
 for (i in 1:dim(co)[1]) {
-  #i = 1
   maW[i,,] <- co[i,,]/rS[i,]
 }
 #All possible SNV sitemuts on panel##################################################################
