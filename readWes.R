@@ -33,22 +33,23 @@ countsW <- countsIw[,,1:4] + countsIw[,,6:9]
 mafsW= array(0, dim=c(dim(countsW)[1],dim(countsW)[2],dim(countsW)[3]))
 auxM <- rowSums(countsW, dims = 2) 
 for (i in 1:dim(countsW)[1]) {
+  i=1
   mafsW[i,,] <- countsW[i,,]  /auxM[i,]
 }
 #################################################################
 ww = array(0, dim=c(dim(co)[1],dim(co)[2],dim(co)[3]))
-sw<- vector()
-for (i in 1:dim(mafsW)[1]) {
+sc<- vector()
+for (i in 1:dim(mafsW)[1]) { 
   for (j in 1:length(pts)) {  
-    if (grepl(as.character(pts[j]), as.character(pileupsIw[preop_i][i]))) {
-      wesP <- wes[wes==pts[j],]
-      mu <- wesP$sitemut_hg38
-      for (k in 1:length(mu)) {
+    if (grepl(as.character(pts[j]), as.character(pileupsIw[preop_i][i]))) { # for pts with WES data
+      wesP <- wes[wes==pts[j],] # find the mutations in WES
+      mu <- wesP$sitemut_hg38 # look up the indexes in the sitemut panel
+      for (k in 1:length(mu)) { # computer for all WES mutations for this sample
         auxW <- mafsW[i,,]
         iW <- sitemut == mu[k] 
-        ww[k] <- auxW[iW]/vo1[iW]*prior11[iW]
+        ww[k] <- auxW[iW]/vo1[iW]*prior11[iW] # VAF divided by PON variance & weighted by Cosmic
       }
-      sw[j] <- sum(ww)/length(mu)
+      sc[j] <- sum(ww)/length(mu) # mutation score per patient
     }
   }
 }
