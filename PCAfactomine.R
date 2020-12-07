@@ -40,18 +40,21 @@ for (i in 1:dim(countsQ1)[1]) {
   noQ[i,] = countsQ1[i,,]
   mafsQ2[i,]  = mafsQ1[i,,]
 }
+# FactoMineR: AnRPackage for Multivariate Analysis
+# https://mran.microsoft.com/snapshot/2016-12-29/web/packages/FactoMineR/vignettes/FactoMineR.pdf
 #res.pca = PCA(noQ, scale.unit=TRUE, ncp=5, graph=T) 
 res.pca = PCA(mafsQ2, scale.unit=TRUE, ncp=5, graph=T) 
 dim(mafsQ2) #24 72376
 ########################################################
-
+# Hierarchical cluster analysis on a set of dissimilarities and methods for analyzing it. 
+aux <- t(mafsQ2[,1:5])
+hc <- hclust(aux)               
+plot(hc) 
+# A heatmap is another way to visualize hierarchical clustering; in the colored image, data values are transformed to color scale.
 df<-scale(mafsP2[,1:5000])
 col <- colorRampPalette(brewer.pal(11, "RdYlBu"))(256)
 heatmap(df, scale = "none", col =  col)
-
-aux <- t(mafsQ2[,1:5])
-hc <- hclust(aux)                # apply hirarchical clustering 
-plot(hc) 
-
+# Hierarchical Clustering with P-Values via Multiscale BootstrapResampling
+# https://cran.r-project.org/web/packages/pvclust/pvclust.pdf
 result <- pvclust(t(mafsP2[,1:5000]), method.dist="cor", method.hclust="average", nboot=1000, parallel=TRUE)
 plot(result)
