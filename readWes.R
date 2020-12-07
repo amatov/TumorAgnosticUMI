@@ -9,13 +9,6 @@ vo1<- vo
 vo1[vo==0]=v0
 prior1 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/180903_prior.RDS")
 prior11 <- prior1[,1:4]
-###################
-maW = array(0, dim=c(dim(co)[1],dim(co)[2],dim(co)[3]))
-rS <- rowSums(co, dims = 2) 
-for (i in 1:dim(co)[1]) {
-  maW[i,,] <- co[i,,]/rS[i,]
-}
-#All possible SNV sitemuts on panel##################################################################
 sitemut <- t(apply(pon_obj2$coordinates, 1, function(x){
   paste( paste0(trimws(x[1]), ":", trimws(x[2]), "_"),
          paste(x[3] ,c("A", "T", "C", "G"), sep = "/"),
