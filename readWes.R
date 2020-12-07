@@ -11,7 +11,7 @@ vo<-apply(co,2:3,var) # variance of the counts of each position based on PON
 v0 <- min(vo[vo>0])/10000000 # for counts w zero variance, we replace w a very small value
 vo1<- vo
 vo1[vo==0]=v0
-# COSMIC prior
+# COSMIC prior ##########################################################################################
 prior1 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/180903_prior.RDS")
 prior11 <- prior1[,1:4]
 # IMPROVE WES data ###################################################################################
