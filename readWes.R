@@ -1,18 +1,19 @@
 library("dplyr")
-source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/duplex_tools.R")
+# PON mutations and variability ###################################################################################
 pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
+sitemut <- t(apply(pon_obj2$coordinates, 1, function(x){
+  paste( paste0(trimws(x[1]), ":", trimws(x[2]), "_"),
+         paste(x[3] ,c("A", "T", "C", "G"), sep = "/"),
+         sep = "")}))
 cou <- pon_obj2[["pon"]]
 co <- cou[,,1:4]+cou[,,6:9]
 vo<-apply(co,2:3,var) # variance of the counts of each position based on PON
 v0 <- min(vo[vo>0])/10000000 # for counts w zero variance, we replace w a very small value
 vo1<- vo
 vo1[vo==0]=v0
+# COSMIC prior
 prior1 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/180903_prior.RDS")
 prior11 <- prior1[,1:4]
-sitemut <- t(apply(pon_obj2$coordinates, 1, function(x){
-  paste( paste0(trimws(x[1]), ":", trimws(x[2]), "_"),
-         paste(x[3] ,c("A", "T", "C", "G"), sep = "/"),
-         sep = "")}))
 # IMPROVE WES data ###################################################################################
 wes <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/201123_wes-spora-mutations-improve.csv", header = TRUE) # HG38
 pts <- unique(wes$pt_id)
@@ -23,6 +24,7 @@ posop14_i <- ItW[ (ItW$op_time_cat == 2)&wes_id, "index"] # 42
 posop30_i <- ItW[ (ItW$op_time_cat == 30)&wes_id, "index"] # 42
 ###################################################################################################
 pileupsIw <- list.files("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/N227", recursive = T, full.names = T, pattern = "bait.pileup")
+source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/duplex_tools.R")
 countsIw <-  piles_to_counts(files = pileupsIw[preop_i], regions = pon_hg19$regions) # PREOP, POSTOP14, POSTOP30
 countsW <- countsIw[,,1:4] + countsIw[,,6:9]
 mafsW= array(0, dim=c(dim(countsW)[1],dim(countsW)[2],dim(countsW)[3]))
