@@ -22,7 +22,7 @@ wes_id <- ItW$pt_id %in% pts
 preop_i <- ItW[(ItW$op_time_cat == -1)&wes_id, "index"] # 57
 posop14_i <- ItW[ (ItW$op_time_cat == 2)&wes_id, "index"] # 42
 posop30_i <- ItW[ (ItW$op_time_cat == 30)&wes_id, "index"] # 42
-###################################################################################################
+# IMPROVE plasma data ##################################################################################################
 pileupsIw <- list.files("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/N227", recursive = T, full.names = T, pattern = "bait.pileup")
 source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/duplex_tools.R")
 countsIw <-  piles_to_counts(files = pileupsIw[preop_i], regions = pon_hg19$regions) # PREOP, POSTOP14, POSTOP30
