@@ -35,6 +35,7 @@ auxM <- rowSums(countsW, dims = 2)
 for (i in 1:dim(countsW)[1]) {
   mafsW[i,,] <- countsW[i,,]  /auxM[i,]
 }
+#################################################################
 ww = array(0, dim=c(dim(co)[1],dim(co)[2],dim(co)[3]))
 sw<- vector()
 for (i in 1:dim(mafsW)[1]) {
@@ -52,13 +53,9 @@ for (i in 1:dim(mafsW)[1]) {
   }
 }
 ###############plot mutation score########################################################
-r1<- -3
-r2 <- 14
-plot(log2(sc1Q), ylim=range(c(r1,r2)), col="green", pch = 17)
-par(new = TRUE)
-plot(log2(sc11Q), ylim=range(c(r1,r2)), col="red", pch = 19)
-par(new = TRUE)
-plot(log2(sc111Q), ylim=range(c(r1,r2)), col="blue", pch = 18)
+r1<- min(log2(sw))-1
+r2 <- max(log2(sw))+1
+plot(log2(sw), ylim=range(c(r1,r2)), col="green", pch = 17)
 ###### debug ########
 #sapply(as.character(pts), function(x) grep(x, pileupsIw[preop_i])) 
 #wes_id <- intersect(ItW$pt_id, pts)
