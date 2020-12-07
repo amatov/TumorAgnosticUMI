@@ -25,7 +25,7 @@ ItW <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umis
 ItW$index <- sapply(as.character(ItW$library_id), function(x) grep(x, pileupsIw))  
 #################################################################
 wes_id <- ItW$pt_id %in% pts
-preop_i <- ItW[(ItW$op_time_cat == -1)&wes_id, "index"] # 57
+preop_i <- ItW[(ItW$op_time_cat == -1)&wes_id, "index"] # 57 of which 44 have WES
 posop14_i <- ItW[ (ItW$op_time_cat == 2)&wes_id, "index"] # 42
 posop30_i <- ItW[ (ItW$op_time_cat == 30)&wes_id, "index"] # 42
 countsIw <-  piles_to_counts(files = pileupsIw[preop_i], regions = pon_obj2$regions) # PREOP, POSTOP14, POSTOP30
