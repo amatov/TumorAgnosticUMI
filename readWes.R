@@ -23,29 +23,13 @@ sitemut <- t(apply(pon_obj2$coordinates, 1, function(x){
          sep = "")}))
 # IMPROVE WES data ###################################################################################
 wes <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/201123_wes-spora-mutations-improve.csv", header = TRUE) # HG38
-#wes <- read.table("~/genomedk/matovanalysis/umiseq_analysis/201123_wes-spora-mutations-improve.csv", header = TRUE) # HG38
 pts <- unique(wes$pt_id)
-#sapply(as.character(pts), function(x) grep(x, pileupsIw[preop_i])) # 141 of 179
-#wes_id <- intersect(ItW$pt_id, pts)
 ItW <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/IMPROVEptList",header = TRUE)
-#ItW <- read.table("~/genomedk/matovanalysis/umiseq_analysis/IMPROVEptList",header = TRUE)
 wes_id <- ItW$pt_id %in% pts
-#ItW$index <- sapply(as.character(ItW$library_id), function(x) grep(x, pileupsIw)) # 141 of 179
 preI <- (ItW$op_time_cat == -1)&wes_id
 preop_i <- ItW[preI, "index"] # 57
 posop14_i <- ItW[ (ItW$op_time_cat == 2)&wes_id, "index"] # 42
 posop30_i <- ItW[ (ItW$op_time_cat == 30)&wes_id, "index"] # 42
-
-#mutations for the individual pt
-wesP <- wes[wes==pts[1],]
-m1 <- wesP$sitemut_hg38[1]
-#chr17:7675235_T/C
-#chr3:179218294_G/A
-#chr7:140753336_A/T
-sum(sitemut == "chr17:7675235_T/C") # 1
-sum(sitemut == m1) # 1
-which(sitemut == m1)# 50720
-sitemut[which(sitemut == m1)] # "chr17:7675235_T/C"
 ###################################################################################################
 pileupsIw <- list.files("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/N227", recursive = T, full.names = T, pattern = "bait.pileup")
 countsIw <-  piles_to_counts(files = pileupsIw[preop_i], regions = pon_hg19$regions) # PREOP, POSTOP14, POSTOP30
@@ -57,31 +41,26 @@ for (i in 1:dim(countsW)[1]) {
 }
 ww = array(0, dim=c(dim(co)[1],dim(co)[2],dim(co)[3]))
 sw<- vector()
-#m<-wesP$sitemut_hg38
 wQ = array(0, dim=c(dim(countsW)[1],dim(countsW)[2],dim(countsW)[3]))
 scQ <- vector()
 counter <- 1
 for (i in 1:dim(mafsW)[1]) {
-  #i=1
-  #j= 95
   for (j in 1:length(pts)) {  
-    if (grepl(as.character(pts[j]), as.character(pileupsIw[preop_i][i]))) {# TRUE
-      #print(i)
-      #print(j)
+    if (grepl(as.character(pts[j]), as.character(pileupsIw[preop_i][i]))) {
       print(counter)
       counter<- counter+1
       wesP <- wes[wes==pts[j],]
       mu <- wesP$sitemut_hg38
       for (k in 1:length(mu)) {
         auxW <- mafsW[i,,]
-        iW <- sitemut == mu[k] # sum(iW) is 1
+        iW <- sitemut == mu[k] 
         wQ[k] <- auxW[iW]/vo1[iW]*prior11[iW]
       }
       scQ[j] <- sum(wQ)/length(mu)
     }
 }
 }
-#######################################################################
+###############plot mutation score########################################################
 r1<- -3
 r2 <- 14
 plot(log2(sc1Q), ylim=range(c(r1,r2)), col="green", pch = 17)
@@ -89,3 +68,17 @@ par(new = TRUE)
 plot(log2(sc11Q), ylim=range(c(r1,r2)), col="red", pch = 19)
 par(new = TRUE)
 plot(log2(sc111Q), ylim=range(c(r1,r2)), col="blue", pch = 18)
+###### debug ########
+#sapply(as.character(pts), function(x) grep(x, pileupsIw[preop_i])) 
+#wes_id <- intersect(ItW$pt_id, pts)
+#ItW$index <- sapply(as.character(ItW$library_id), function(x) grep(x, pileupsIw)) 
+########## mutations for the individual pt
+wesP <- wes[wes==pts[1],]
+m1 <- wesP$sitemut_hg38[1]
+#chr17:7675235_T/C
+#chr3:179218294_G/A
+#chr7:140753336_A/T
+sum(sitemut == "chr17:7675235_T/C") # 1
+sum(sitemut == m1) # 1
+which(sitemut == m1)# 50720
+sitemut[which(sitemut == m1)] # "chr17:7675235_T/C"
