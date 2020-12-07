@@ -51,9 +51,15 @@ for (i in 1:dim(countsQ1)[1]) {
 plot(erQ1)
 ### IMPROVE #####
 pileupsI <- list.files("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/N227", recursive = T, full.names = T, pattern = "bait.pileup")
-
+countsI0 <-  piles_to_counts(files = pileupsI[1:184], 
+                             regions = pon_hg19$regions)
+countsI= array(0, dim=c(dim(countsI0)[1],sum(list),dim(countsI0)[3]))
+for (i in 1:dim(countsI0)[1]) {
+  p2 <- data.frame(countsI0[i,,])#CRUK
+  p1 <- p2 [list == 1, ] 
+  countsI[i,,] <- data.matrix(p1)
+}
 countsI1 <- countsI[,,1:4] + countsI[,,6:9]
-
 erI1<- vector()
 mafsI1 = array(0, dim=c(dim(countsI1)[1],dim(countsI1)[2],dim(countsI1)[3]))
 auxMI <- rowSums(countsI1, dims = 2) 
@@ -64,12 +70,10 @@ for (i in 1:dim(countsI1)[1]) {
 plot(erI1)
 # CRUK patient samples ##########################################################################################
 pileupsC <- list.files("~/genomedk/PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "bait.pileup")
-countsC0 <-  piles_to_counts(files = pileupsC, 
-                             #countsC0 <-  piles_to_counts(files = pileupsC[1:8], 
+countsC0 <-  piles_to_counts(files = pileupsC[1:90], 
                              regions = pon_hg19$regions)
 countsC= array(0, dim=c(dim(countsC0)[1],sum(list),dim(countsC0)[3]))
 for (i in 1:dim(countsC0)[1]) {
-  #i=1
   p2 <- data.frame(countsC0[i,,])#CRUK
   p1 <- p2 [list == 1, ] 
   countsC[i,,] <- data.matrix(p1)
@@ -92,7 +96,7 @@ countsD <-  piles_to_counts(files = pileupsD,
                             regions = pon_obj2$regions)
 countsDD= array(0, dim=c(dim(countsD)[1],sum(list),dim(countsD)[3]))
 for (i in 1:dim(countsD)[1]) {
-  p2 <- data.frame(countsD[i,,])#IMPROVE
+  p2 <- data.frame(countsD[i,,])
   p1 <- p2 [list == 1, ] 
   countsDD[i,,] <- data.matrix(p1)
 }
