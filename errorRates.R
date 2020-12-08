@@ -6,6 +6,8 @@ f2 <- function(a, M, S){
 #For one comination 
 S =5; M=0.01; a = mafs
 indP <- f2(mafs, M, S)
+mafs[i] <- NA
+
 # 45 Subjects of the Control Panel of Normal PON ####################################################################
 pon_obj2 <- readRDS("sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
 pon_counts <- pon_obj2[["pon"]]
@@ -101,6 +103,7 @@ for (i in 1:dim(countsD)[1]) {
   countsDD[i,,] <- data.matrix(p1)
 }
 countsD1 <- countsDD[,,1:4] + countsDD[,,6:9]
+mafsD1 = array(0, dim=c(dim(countsD1)[1],dim(countsD1)[2],dim(countsD1)[3]))
 erD1<- vector()
 auxMD <- rowSums(countsD1, dims = 2) 
 for (i in 1:dim(countsD1)[1]) {
