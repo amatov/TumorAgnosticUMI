@@ -1,39 +1,48 @@
+source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R") #1/0 list
 source("~/genomedk/matovanalysis/umiseq_analysis/R/cmapply.R")
 source("~/genomedk/matovanalysis/umiseq_analysis/R/image_plot.R")
-#pon <- readRDS("201020_hg38-novaseq-xgen-sporacrc-pon.RDS") #hg38
-pon <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
-
-#Need the MAF in array maf
-data <- pon$pon
-#Turn into 18094*5*46 arrays
-counts <- list()
-for(pt in 1:dim(data)[[1]]) counts[[pt]] <- data[pt,,1:5] + data[pt,,6:10]
-counts <- simplify2array(counts)
-mafs <- list()
-for(pt in 1:dim(data)[[1]]) mafs[[pt]] <- (data[pt,,1:5] + data[pt,,6:10])/rowSums(data[pt,,])
-mafs <- simplify2array(mafs)
-
-#Flag those having same as "reference"
-i <- t(sapply(dimnames(mafs)[[1]], function(b) c("A", "T", "C", "G", "-") %in% b))
-sum(i)
-counts[i] <- NA
-mafs[i] <- NA
-
-#f1: Number of sites that have maf >= M in >= S samples
-f1 <- function(a, M, S){
-  sum(apply(a, c(1, 2), function(x)sum(sum(x >= M, na.rm=T) >= S)))
+#pon <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
+pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
+pon_counts <- pon_obj2[["pon"]]
+inRef <- t(sapply(dimnames(pon_counts)[[2]], function(b) c("A", "T", "C", "G") %in% b))
+sum(inRef)
+#pon_counts[inRef] <- NA
+#no1 = array(0, dim=c(dim(pon_counts)[1],sum(list),dim(pon_counts)[3]))
+no <- pon_counts[,,1:4]+pon_counts[,,6:9]
+mafsP1 = array(0, dim=c(dim(no)[1],dim(no)[2],dim(no)[3]))
+auxMP <- rowSums(no, dims = 2) 
+for (i in 1:dim(no)[1]) {
+  mafsP1[i,,] <- no[i,,]  /auxMP[i,]
+}
+#mafsP2 = array(0, dim=c(dim(no)[1],sum(list),dim(no)[3]))# core panel
+mafsP2 = array(0, dim=c(dim(no)[1],dim(no)[2],dim(no)[3]))# full list
+for (i in 1:dim(no)[1]) {
+  #i=1
+  auxRP <- mafsP1[i,,]
+  auxRP[inRef] <- NA
+  p2 <- data.frame(auxRP)#PON
+  p1 <- p2 [list == 1, ] 
+  mafsP2[i,,] <- data.matrix(p1)
 }
 
 f2 <- function(a, M, S){
-  #Get indeces instead of number of sites
+  #Get indexes instead of number of sites
   which(apply(a, c(1, 2), function(x)sum(sum(x >= M, na.rm=T) >= S))>0)
+  #which(apply(a, c(2, 3), function(x)sum(sum(x >= M, na.rm=T) >= S))>0)
 }
+f3 <- function(a, M, S){
+  #Get indexes instead of number of sites
+  which(apply(a, c(2, 3), function(x)sum(sum(x >= M, na.rm=T) >= S))>0)
+  #which(apply(a, c(2, 3), function(x)sum(sum(x >= M, na.rm=T) >= S))>0)
+}
+apply(mafs[1:1000,,], c(1,2), function(x)str(x))
+apply(mafsP2[,1:1000,], c(2,3), function(x)str(x))
+#For one combination 
+S =10; M=0.01;  
+f3(mafsP2, M, S)
+f2(mafs, M, S)
 
-#For one comination 
-S =5; M=0.01; a = mafs
-indP <- f2(mafs, M, S)
-
-#indP2 <- f2(mafs, 0.35, 1)
+indP <- f2(mafs, 0.01, 10)
 #setdiff(indP, indP2)
 #which(  , arr.ind = T )
 
@@ -55,6 +64,26 @@ r <- cmapply(f1,
 
 df <- reshape2::dcast(r, M ~ S)
 
+#MADS
+# mean(mafs[mafs<0.1 & mafs >0], na.rm = T)
+mafsO <- mafs
+mean(mafsO[ mafsO<=0.35 ], na.rm = T) # 3.044935e-05
+for (i in 1:45) {
+  mafs[,,i][indP]<-NA
+}
+mean(mafs[  mafs<=0.35 ], na.rm = T) # 2.322167e-05
+er <- vector()
+erO <- vector()
+for (i in 1:45) {
+  auxB <- mafs[,,i] 
+  er[i] <- mean(auxB[auxB<=0.35], na.rm=T)
+  auxBO <- mafsO[,,i] 
+  erO[i] <- mean(auxBO[auxBO<=0.35], na.rm=T)
+}
+
+length(mafs) 
+
+
 print(df)
 
 write.table(df, "~/genomedk/matovanalysis/umiseq_analysis/blacklisting.cvs", row.names = F)
@@ -66,3 +95,19 @@ image_plot(data = log10(df[,2:ncol(df)]+1),
            ylab = df[,1],
            xlab = names(df)[2:ncol(df)])
 dev.off()
+
+pon <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
+data <- pon$pon
+#Turn into 18094*5*46 arrays
+counts <- list()
+for(pt in 1:dim(data)[[1]]) counts[[pt]] <- data[pt,,1:5] + data[pt,,6:10]
+counts <- simplify2array(counts)
+mafs <- list()
+for(pt in 1:dim(data)[[1]]) mafs[[pt]] <- (data[pt,,1:5] + data[pt,,6:10])/rowSums(data[pt,,])
+mafs <- simplify2array(mafs)
+
+#Flag those having same as "reference"
+inM <- t(sapply(dimnames(mafs)[[1]], function(b) c("A", "T", "C", "G", "-") %in% b))
+sum(inM)
+counts[inM] <- NA
+mafs[inM] <- NA
