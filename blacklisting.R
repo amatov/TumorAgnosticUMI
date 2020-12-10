@@ -35,12 +35,12 @@ f3 <- function(a, M, S){
   which(apply(a, c(2, 3), function(x)sum(sum(x >= M, na.rm=T) >= S))>0)
   #which(apply(a, c(2, 3), function(x)sum(sum(x >= M, na.rm=T) >= S))>0)
 }
-apply(mafs[1:1000,,], c(1,2), function(x)str(x))
-apply(mafsP2[,1:1000,], c(2,3), function(x)str(x))
+#apply(mafs[1:1000,,], c(1,2), function(x)str(x))
+#apply(mafsP2[,1:1000,], c(2,3), function(x)str(x))
 #For one combination 
-S =10; M=0.01;  
+S =5; M=0.01;  
 f3(mafsP2, M, S)
-f2(mafs, M, S)
+f2(mafs, M, S)# ref included.
 
 indP <- f2(mafs, 0.01, 10)
 #setdiff(indP, indP2)
