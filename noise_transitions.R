@@ -58,7 +58,11 @@ covQ3 <- covQ2[,1:24]# the sorted coverage for each position in the 24 samples
 means = apply(covQ3,1,mean)
 sds = apply(covQ3,1,sd)
 df = data.frame(idx = 1:nrow(covQ3), mean = means, sd = sds)
-ggplot(df, aes(x = idx, y = mean)) + geom_ribbon(aes(ymin = mean - sd, ymax = mean + sd) , fill = "grey70") 
+#df2 = data.frame(sort(rowSums(cQ11), decreasing = TRUE))  
+df2 = data.frame(sort(means, decreasing = TRUE))  
+ggplot(df, aes(x = idx, y = mean)) +geom_line() + geom_ribbon(aes(ymin = mean - sd, ymax = mean + sd) , fill = "grey40",alpha=.5) 
+ggplot(df, aes(x = idx, y = mean)) + geom_ribbon(aes(ymin = mean - sd, ymax = mean + sd) ) 
+ggplot(df, aes(x = idx, y = mean)) + geom_ribbon(aes(ymin = mean - sd, ymax = mean + sd) , fill = "grey70") + geom_step(data = df2)
 # SHOW CI ###############################################
 means <- covQ2[,25]
 stdev <- sqrt(apply(covQ3,1,var))
@@ -90,9 +94,10 @@ counts1 <- counts[,,1:4] + counts[,,6:9]# counts for the 8 DS panels
 
 # noise calculations
 r1 <-rownames(no[1,,])
-p2 <- data.frame(ref=r1, no[1,,])#PON
+#p2 <- data.frame(ref=r1, no[1,,])#PON
 #p2 <- data.frame(ref=r1, counts1[1,,]) #DS 
-#p2 <- data.frame(ref=r1, countsQ1[1,,])#QIAGEN
+#countsQ1[1,,][indP]<-NA # blacklist
+p2 <- data.frame(ref=r1, countsQ1[1,,])#QIAGEN
 #p2 <- data.frame(ref=r1, countsC1[1,,])#CRUK
 p1 <- p2 [list == 1, ] 
  
@@ -127,10 +132,15 @@ res = resP  %>% group_by(ref, alternate_allele) %>% summarise(errors=sum(count))
 res$sampleID = 1
 res$nonrefcounts = E
 
-for (i in 2:45) {
-  p2 <- data.frame(ref=r1, no[i,,])#PON
+samples= c(2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,19,20,21,22,23,24)
+#samples= c(2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 25, 26, 27, 29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45)
+
+for (i in samples) {
+  #i=2
+  #p2 <- data.frame(ref=r1, no[i,,])#PON
   #p2 <- data.frame(ref=r1, counts1[i,,])#DS
-  #p2 <- data.frame(ref=r1, countsQ1[i,,])#QIAGEN
+  #countsQ1[i,,][indP]<-NA # blacklist
+  p2 <- data.frame(ref=r1, countsQ1[i,,])#QIAGEN
   #p2 <- data.frame(ref=r1, countsC1[i,,])#CRUK
   p1 <- p2 [list == 1, ] 
   
@@ -175,7 +185,10 @@ ErI <- Er
 
 Res_plot = res %>% mutate(mutation = paste0(ref,">",alternate_allele))
 #df_total = Res_plot  %>% group_by(sampleID) %>% summarize(total_count = sum(count))
-ggplot(Res_plot, aes(x = as.factor(sampleID), y = error_freq, fill=mutation)) + geom_bar(position="fill", stat="identity", color = "black") + geom_text(aes(x = sampleID, y = 0, label=nonrefcounts, angle = 90,size = 2))
+ggplot(Res_plot, aes(x = as.factor(sampleID), y = error_freq, fill=mutation)) + geom_bar(position="fill", stat="identity", color = "black") #+ geom_text(aes(x = sampleID, y = 0, label=nonrefcounts, angle = 90,size = 2))
+
+# absolute errors
+ggplot(Res_plot, aes(x = as.factor(sampleID), y = errors, fill=mutation)) + geom_bar( stat="identity", color = "black")
 
 # check ref. for VAF>0.5
 resCHr = resP %>% filter(ref==alternate_allele)
