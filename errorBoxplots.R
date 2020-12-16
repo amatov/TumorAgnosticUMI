@@ -1,4 +1,18 @@
-counts <- pon$pon
+pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
+countsQ00 <-  piles_to_counts(files = pileupsQ, 
+                             regions = pon_hg19$regions)
+countsQ = array(0, dim=c(dim(countsQ00)[1]-2,dim(countsQ00)[2],dim(countsQ00)[3]))
+countsQ[1:16,,] <- countsQ00[1:16,,]
+countsQ[17:22,,]<-countsQ00[19:24,,]
+counts <- countsQ
+############################
+pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
+pon_counts <- pon_obj2[["pon"]]
+no = array(0, dim=c(dim(pon_counts)[1]-1,dim(pon_counts)[2],dim(pon_counts)[3]))
+no[1:27,,] <- pon_counts[1:27,,]
+no[28:44,,]<-pon_counts[29:45,,]
+counts <- no
+##############################
 #Turn into 18094*5*46 arrays
 library(dplyr)
 mafs <- abind::abind(
@@ -62,7 +76,7 @@ pdata_m <-
   reshape2::melt(pdata, measure.var = colnames(pdata)) %>% 
   dplyr::filter(value < 0.1)
 
-boxplot(value ~ variable, data = pdata_m, ylab = "MAF", xlab = "", 
+boxplot(value ~ variable, data = pdata_m, ylab = "VAF", xlab = "", 
         main = "MAFs of core positions in all PONs [0; 0.1[")
 
 
@@ -85,8 +99,9 @@ pdata_m <-
   dplyr::filter(value < 0.1, 
                 value > 0)
 lbl <- group_by(pdata_m, variable) %>% summarise(n = n())
-boxplot(value ~ variable, data = pdata_m, log = "y", ylab = "MAF", xlab = "", 
-        main = "Mean MAFs of core positions across PONs ]0; 0.1[")
+
+boxplot(value ~ variable, data = pdata_m, log = "y", ylab = "VAF", xlab = "", 
+        main = "Mean VAFs of core positions across 22 QIAGEN samples ]0; 0.1[")
 mtext(paste0(trimws(format(round(lbl[,2, drop = T]/1000, 1), nsmall = 1)), "k" ),
       side = 1,
       at = 1:nrow(lbl), 
@@ -96,5 +111,5 @@ pdata_m <-
   reshape2::melt(pdata, measure.var = colnames(pdata)) %>% 
   dplyr::filter(value < 0.1)
 
-boxplot(value ~ variable, data = pdata_m, ylab = "MAF", xlab = "", 
-        main = "Mean MAFs of core positions across PONs [0; 0.1[")
+boxplot(value ~ variable, data = pdata_m, ylab = "VAF", xlab = "", 
+        main = "Mean VAFs of core positions across 22 QIAGEN samples [0; 0.1[")
