@@ -8,7 +8,10 @@ inRef <- t(sapply(dimnames(pon_counts)[[2]], function(b) c("A", "T", "C", "G") %
 sum(inRef)
 #pon_counts[inRef] <- NA
 #no1 = array(0, dim=c(dim(pon_counts)[1],sum(list),dim(pon_counts)[3]))
-no <- pon_counts[,,1:4]+pon_counts[,,6:9]
+no0 <- pon_counts[,,1:4]+pon_counts[,,6:9]
+no = array(0, dim=c(dim(no0)[1]-1,dim(no0)[2],dim(no0)[3]))
+no[1:27,,] <- no0[1:27,,]
+no[28:44,,]<-no0[29:45,,]
 mafsP1 = array(0, dim=c(dim(no)[1],dim(no)[2],dim(no)[3]))
 auxMP <- rowSums(no, dims = 2) 
 for (i in 1:dim(no)[1]) {
@@ -21,10 +24,33 @@ for (i in 1:dim(no)[1]) {
   auxRP <- mafsP1[i,,]
   auxRP[inRef] <- NA
   p2 <- data.frame(auxRP)#PON
-  p1 <- p2 [list == 1, ] 
+  p1 <- p2 #[list == 1, ] 
   mafsP2[i,,] <- data.matrix(p1)
 }
-
+######################################
+pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
+countsQ0 <-  piles_to_counts(files = pileupsQ, 
+                             regions = pon_hg19$regions)
+countsQ00 <- countsQ0[,,1:4]+countsQ0[,,6:9]
+countsQ = array(0, dim=c(dim(countsQ00)[1]-2,dim(countsQ00)[2],dim(countsQ00)[3]))
+countsQ[1:16,,] <- countsQ00[1:16,,]
+countsQ[17:22,,]<-countsQ00[19:24,,]
+mafsQ1 = array(0, dim=c(dim(countsQ)[1],dim(countsQ)[2],dim(countsQ)[3]))
+auxMQ <- rowSums(countsQ, dims = 2) 
+for (i in 1:dim(countsQ)[1]) {
+  mafsQ1[i,,] <- countsQ[i,,]  /auxMQ[i,]
+}
+#mafsQ2 = array(0, dim=c(dim(no)[1],sum(list),dim(no)[3]))# core panel
+mafsQ2 = array(0, dim=c(dim(countsQ)[1],dim(countsQ)[2],dim(countsQ)[3]))# full list
+for (i in 1:dim(countsQ)[1]) {
+  #i=1
+  auxRQ <- mafsQ1[i,,]
+  auxRQ[inRef] <- NA
+  p2 <- data.frame(auxRQ)
+  p1 <- p2 #[list == 1, ] 
+  mafsQ2[i,,] <- data.matrix(p1)
+}
+########################################
 f2 <- function(a, M, S){
   #Get indexes instead of number of sites
   which(apply(a, c(1, 2), function(x)sum(sum(x >= M, na.rm=T) >= S))>0)
@@ -39,7 +65,17 @@ f3 <- function(a, M, S){
 #apply(mafsP2[,1:1000,], c(2,3), function(x)str(x))
 #For one combination 
 S =5; M=0.01;  
-f3(mafsP2, M, S)
+a <- f3(mafsP2, M, S)
+#1598  2207  5434  8551  9245 11243 12551 13815 18170 18937 21378 21687 28047 29455 32718 35119 35254 37031 37182 39129 41149 47691 
+#47769 49058 49983 50282 50377 51134 51276 51280
+# 51289 54657 54661 54990 55624 63322 63689 64088 64382 66794 66987 68940
+b <- f3(mafsQ2, M, S)
+#  1598  5434  8551  9245 12551 13815 18049 18055 18170 18937 21378 21687 28047 29455 32718 35119 35254 37031 37182 41149 47691 
+#47769 49058 49983 50282 51134 51276 51280 51283 51289
+#54204 54233 54990 55624 57151 63322 63689 64088 64382 66794 66987 72316
+unique(b[! b %in% a])
+unique(a[! a %in% b])
+
 f2(mafs, M, S)# ref included.
 
 indP <- f2(mafs, 0.01, 10)
