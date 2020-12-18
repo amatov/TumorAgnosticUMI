@@ -47,6 +47,10 @@ for (i in 1:dim(countsQ1)[1]) {
 res.pca = PCA(mafsQ2, scale.unit=TRUE, ncp=5, graph=T) 
 dim(mafsQ2) #24 72376
 ########################################################
+cohort2 <- rbind(mafsP2, mafsQ2)
+dim(cohort2) # 69 72376
+res.pca = PCA(cohort2, scale.unit=TRUE, ncp=5, graph=T) 
+###########################################################
 # Hierarchical cluster analysis on a set of dissimilarities and methods for analyzing it. 
 aux <- t(mafsQ2[,1:5])
 hc <- hclust(aux)               
