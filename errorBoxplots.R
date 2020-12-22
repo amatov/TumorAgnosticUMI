@@ -11,7 +11,7 @@ pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/um
 pon_counts <- pon_obj2[["pon"]]
 no = array(0, dim=c(dim(pon_counts)[1]-1,dim(pon_counts)[2],dim(pon_counts)[3]))
 no[1:27,,] <- pon_counts[1:27,,]
-no[28:44,,]<-pon_counts[29:45,,]
+no[28:45,,]<-pon_counts[29:46,,]
 counts <- no
 ##############################
 #Turn into 18094*5*46 arrays
@@ -102,7 +102,7 @@ pdata_m <-
 lbl <- group_by(pdata_m, variable) %>% summarise(n = n())
 
 boxplot(value ~ variable, data = pdata_m, log = "y", ylab = "VAF", xlab = "", 
-        main = "Mean VAFs of core positions across 22 QIAGEN samples ]0; 0.1[")
+        main = "Mean VAFs of core positions across 45 PON samples ]0; 0.1[")
 mtext(paste0(trimws(format(round(lbl[,2, drop = T]/1000, 1), nsmall = 1)), "k" ),
       side = 1,
       at = 1:nrow(lbl), 
@@ -113,7 +113,7 @@ pdata_m <-
   dplyr::filter(value < 0.1)
 # CHANGE TO VIOLIN PLOT 
 boxplot(value ~ variable, data = pdata_m, ylab = "VAF", xlab = "", 
-        main = "Mean VAFs of core positions across 22 QIAGEN samples [0; 0.1[")
+        main = "Mean VAFs of core positions across 45 PON samples [0; 0.1[")
 
 pdata1 <- as.data.frame(pdata)
 p <- ggplot(pdata, aes(x=colnames(pdata), y=rownames(pdata))) + geom_violin()
