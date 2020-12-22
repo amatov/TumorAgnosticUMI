@@ -50,7 +50,7 @@ x_list$m <- aux13
 x_list$n <- aux14
 x_list$r <- aux15
 x_list$s <- aux16
-vioplot2(x = x_list, col=c("red", "blue", "green","red", "blue", "green","red", "blue", "green","red", "blue", "green"))
+vioplot2(x = x_list, col=c("red", "blue", "green","red", "blue", "green","red", "blue", "green","red", "blue", "green","red", "blue", "green"))
 
 vioplot2 <- function (x, ..., range = 1.5, h = NULL, ylim = NULL, names = NULL, 
                       horizontal = FALSE, col = "magenta", border = "black", lty = 1, 
