@@ -13,7 +13,8 @@ indP = c(1598,2207,5434,8551,9245,11243,12551,13815,18170,18937,21378,21687,2804
 #indP = c(1029,1638,4717, 7834, 9768, 11594, 18341, 27868, 33302, 35174, 40763, 42504, 42803, 42898, 43655, 43797, 43801, 43810, 46627, 46631, 47168, 54718, 58832)
 VAFcut = 0.35
 # 45 Subjects of the Control Panel of Normal PON ####################################################################
-pon_obj2 <- readRDS("sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
+pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
+# pon_obj2 <- readRDS("sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 45 subjects only, 1 is missing
 pon_counts <- pon_obj2[["pon"]]
 no1 = array(0, dim=c(dim(pon_counts)[1],sum(list),dim(pon_counts)[3]))
 for (i in 1:dim(pon_counts)[1]) {
@@ -125,6 +126,8 @@ plot(erQ1, na.rm=T,ylim=range(c(1e-05,0.00011)), col="green", pch = 17)
 par(new = TRUE)
 plot(erP1, na.rm=T,ylim=range(c(1e-05,0.00011)), col="purple", pch = 12)
 legend(3,1.1e-04,legend=c("QIAGEN", "PON"),col=c("green","blue"),lty=1:1, cex=1.0)
+mean(erQ1, na.rm=T)
+mean(erP1, na.rm=T)
 ###########################################################################################################
 plot(erI1, ylim=range(c(1e-05,0.00011)), col="orange", main = "Error rate", pch = 15)
 par(new = TRUE)
