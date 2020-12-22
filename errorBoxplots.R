@@ -115,5 +115,7 @@ pdata_m <-
 boxplot(value ~ variable, data = pdata_m, ylab = "VAF", xlab = "", 
         main = "Mean VAFs of core positions across 45 PON samples [0; 0.1[")
 
+require(vioplot)
 pdata1 <- as.data.frame(pdata)
 p <- ggplot(pdata, aes(x=colnames(pdata), y=rownames(pdata))) + geom_violin()
+p <- ggplot(pdata, aes(x=colnames(pdata_m[,1]), y=rownames(pdata_m[,2]))) + geom_violin()
