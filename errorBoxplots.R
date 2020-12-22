@@ -6,7 +6,8 @@ countsQ[1:16,,] <- countsQ00[1:16,,]
 countsQ[17:22,,]<-countsQ00[19:24,,]
 counts <- countsQ
 ############################
-pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
+pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
+#pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 45
 pon_counts <- pon_obj2[["pon"]]
 no = array(0, dim=c(dim(pon_counts)[1]-1,dim(pon_counts)[2],dim(pon_counts)[3]))
 no[1:27,,] <- pon_counts[1:27,,]
@@ -75,7 +76,7 @@ mtext(paste0(trimws(format(round(lbl[,2, drop = T]/1000, 1), nsmall = 1)), "k" )
 pdata_m <- 
   reshape2::melt(pdata, measure.var = colnames(pdata)) %>% 
   dplyr::filter(value < 0.1)
-
+# CHANGE TO VIOLIN PLOT 
 boxplot(value ~ variable, data = pdata_m, ylab = "VAF", xlab = "", 
         main = "MAFs of core positions in all PONs [0; 0.1[")
 
@@ -110,6 +111,9 @@ mtext(paste0(trimws(format(round(lbl[,2, drop = T]/1000, 1), nsmall = 1)), "k" )
 pdata_m <- 
   reshape2::melt(pdata, measure.var = colnames(pdata)) %>% 
   dplyr::filter(value < 0.1)
-
+# CHANGE TO VIOLIN PLOT 
 boxplot(value ~ variable, data = pdata_m, ylab = "VAF", xlab = "", 
         main = "Mean VAFs of core positions across 22 QIAGEN samples [0; 0.1[")
+
+pdata1 <- as.data.frame(pdata)
+p <- ggplot(pdata, aes(x=colnames(pdata), y=rownames(pdata))) + geom_violin()
