@@ -8,7 +8,8 @@ setwd ('~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis'
 source("sw_input_files/duplex_tools.R")
 
 # 45 Subjects of the Control Panel of Normal PON ####################################################################
-pon_obj2 <- readRDS("sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
+#pon_obj2 <- readRDS("sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
+pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
 no1 <- pon_obj2[["pon"]] # counts
 no <- no1[,,1:4] + no1[,,6:9]
 no2 = array(0, dim=c(dim(no)[1],dim(no)[2]*dim(no)[3]))
