@@ -16,11 +16,16 @@ VAFcut = 0.35
 pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
 # pon_obj2 <- readRDS("sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 45 subjects only, 1 is missing
 pon_counts <- pon_obj2[["pon"]]
-no1 = array(0, dim=c(dim(pon_counts)[1],sum(list),dim(pon_counts)[3]))
-for (i in 1:dim(pon_counts)[1]) {
+
+no0 = array(0, dim=c(dim(pon_counts)[1]-1,dim(pon_counts)[2],dim(pon_counts)[3]))
+no0[1:27,,] <- pon_counts[1:27,,]
+no0[28:45,,]<-pon_counts[29:46,,]
+
+no1 = array(0, dim=c(dim(no0)[1],sum(list),dim(no0)[3]))
+for (i in 1:dim(no0)[1]) {
   #i=1
-  pon_counts[i,,][indP]<-NA # blacklist
-  p2 <- data.frame(pon_counts[i,,])#PON
+  no0[i,,][indP]<-NA # blacklist
+  p2 <- data.frame(no0[i,,])#PON
   p1 <- p2 [list == 1, ] 
   no1[i,,] <- data.matrix(p1)
   #no1[i,,][indP]<-NA # blacklist
@@ -38,8 +43,12 @@ plot(erP1)
 print(erP1)
 # QIAGEN healthy samples ############################################################################################
 pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
-countsQ0 <-  piles_to_counts(files = pileupsQ, 
-                             regions = pon_hg19$regions)
+countsQ00 <-  piles_to_counts(files = pileupsQ, 
+                              regions = pon_hg19$regions)
+countsQ = array(0, dim=c(dim(countsQ00)[1]-2,dim(countsQ00)[2],dim(countsQ00)[3]))
+countsQ[1:16,,] <- countsQ00[1:16,,]
+countsQ[17:22,,]<-countsQ00[19:24,,]
+countsQ0 <- countsQ
 countsQ= array(0, dim=c(dim(countsQ0)[1],sum(list),dim(countsQ0)[3]))
 for (i in 1:dim(countsQ0)[1]) {
   countsQ0[i,,][indP]<-NA # blacklist
