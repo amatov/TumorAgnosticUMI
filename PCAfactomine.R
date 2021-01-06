@@ -60,8 +60,15 @@ res.pca = PCA(cohort4, scale.unit=TRUE, ncp=5, graph=T)
 ### IMPROVE #####
 pileupsI <- list.files("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/N227", recursive = T, full.names = T, pattern = "bait.pileup$")
 pon_hg19 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/call/references/200419_novaseq-xgen-sporacrc-pon.RDS") 
-countsI0 <-  piles_to_counts(files = pileupsI[1:214], regions = pon_hg19$regions)
-countsI1 <- countsI0[,,1:4] + countsI0[,,6:9]
+countsI0 <-  piles_to_counts(files = pileupsI[1:229], regions = pon_hg19$regions)
+countsI00 <- array(0, dim=c(dim(countsI0)[1]-4,dim(countsI0)[2],dim(countsI0)[3]))
+countsI00[1:20,,]<-countsI0[1:20,,]
+countsI00[21:46,,]<-countsI0[22:47,,]
+countsI00[47:50,,]<-countsI0[49:52,,]
+countsI00[51:57,,]<-countsI0[54:60,,]
+countsI00[58:225,,]<-countsI0[62:229,,]
+countsI1 <- countsI00[,,1:4] + countsI00[,,6:9]
+# REMOVE #48 (N227-1981), #21 (N227-1972), #53 (N227-1985). 
 mafsI1 = array(0, dim=c(dim(countsI1)[1],dim(countsI1)[2],dim(countsI1)[3]))
 auxMI <- rowSums(countsI1, dims = 2) 
 for (i in 1:dim(countsI1)[1]) {
@@ -76,7 +83,11 @@ res.pca = PCA(mafsI2, scale.unit=TRUE, ncp=5, graph=T)
 pileupsC <- list.files("~/genomedk/PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "bait.pileup")
 pon_hg19 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/call/references/200419_novaseq-xgen-sporacrc-pon.RDS") 
 countsC0 <-  piles_to_counts(files = pileupsC[1:90], regions = pon_hg19$regions)
-countsC1 <- countsC0[,,1:4] + countsC0[,,6:9]
+countsC00 <- array(0, dim=c(dim(countsC0)[1]-1,dim(countsC0)[2],dim(countsC0)[3]))
+countsC00[1:5,,]<-countsC0[1:5,,]
+countsC00[6:89,,]<-countsC0[7:90,,]
+countsC1 <- countsC00[,,1:4] + countsC00[,,6:9]
+# REMOVE     #6 (N289-100)
 mafsC1 = array(0, dim=c(dim(countsC1)[1],dim(countsC1)[2],dim(countsC1)[3]))
 auxMC <- rowSums(countsC1, dims = 2) 
 for (i in 1:dim(countsC1)[1]) {
