@@ -94,10 +94,10 @@ counts1 <- counts[,,1:4] + counts[,,6:9]# counts for the 8 DS panels
 
 # noise calculations
 r1 <-rownames(no[1,,])
-#p2 <- data.frame(ref=r1, no[1,,])#PON
+p2 <- data.frame(ref=r1, no[1,,])#PON
 #p2 <- data.frame(ref=r1, counts1[1,,]) #DS 
 #countsQ1[1,,][indP]<-NA # blacklist
-p2 <- data.frame(ref=r1, countsQ1[1,,])#QIAGEN
+#p2 <- data.frame(ref=r1, countsQ1[1,,])#QIAGEN
 #p2 <- data.frame(ref=r1, countsC1[1,,])#CRUK
 p1 <- p2 [list == 1, ] 
  
@@ -132,15 +132,15 @@ res = resP  %>% group_by(ref, alternate_allele) %>% summarise(errors=sum(count))
 res$sampleID = 1
 res$nonrefcounts = E
 
-samples= c(2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,19,20,21,22,23,24)
+#samples= c(2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,19,20,21,22,23,24)
 #samples= c(2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24, 25, 26, 27, 29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45)
 
-for (i in samples) {
-  #i=2
-  #p2 <- data.frame(ref=r1, no[i,,])#PON
+for (i in 2:45) {
+  print(i)
+  p2 <- data.frame(ref=r1, no[i,,])#PON
   #p2 <- data.frame(ref=r1, counts1[i,,])#DS
   #countsQ1[i,,][indP]<-NA # blacklist
-  p2 <- data.frame(ref=r1, countsQ1[i,,])#QIAGEN
+  #p2 <- data.frame(ref=r1, countsQ1[i,,])#QIAGEN
   #p2 <- data.frame(ref=r1, countsC1[i,,])#CRUK
   p1 <- p2 [list == 1, ] 
   
