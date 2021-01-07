@@ -1,4 +1,5 @@
-bed <- read.table("~/genomedk/matovanalysis/umiseq_analysis/R/NEW_METHOD_hg38_08feb2016_capture_targets.bed",header = FALSE, sep="\t",stringsAsFactors=FALSE, quote="")
+#bed <- read.table("~/genomedk/matovanalysis/umiseq_analysis/R/NEW_METHOD_hg38_08feb2016_capture_targets.bed",header = FALSE, sep="\t",stringsAsFactors=FALSE, quote="")
+bed <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/shared_data_flies/NEW_METHOD_hg38_08feb2016_capture_targets.bed",header = FALSE, sep="\t",stringsAsFactors=FALSE, quote="")
 
 pos <- bed[,3] - bed[,2] + 1
 sum(pos)
