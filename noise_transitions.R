@@ -19,7 +19,7 @@ library("tidyr")
 library("ggplot2")
 library(qlcMatrix) 
 library(FactoMineR)
-source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R")
+source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/R/read_bed.R")
 ############################################################################################################################
 pon_hg19 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/call/references/200419_novaseq-xgen-sporacrc-pon.RDS") # 
 str(pon_hg19)
