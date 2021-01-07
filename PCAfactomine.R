@@ -61,12 +61,18 @@ res.pca = PCA(cohort4, scale.unit=TRUE, ncp=5, graph=T)
 pileupsI <- list.files("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/N227", recursive = T, full.names = T, pattern = "bait.pileup$")
 pon_hg19 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/call/references/200419_novaseq-xgen-sporacrc-pon.RDS") 
 countsI0 <-  piles_to_counts(files = pileupsI[1:229], regions = pon_hg19$regions)
-countsI00 <- array(0, dim=c(dim(countsI0)[1]-4,dim(countsI0)[2],dim(countsI0)[3]))
+countsI00 <- array(0, dim=c(dim(countsI0)[1]-12,dim(countsI0)[2],dim(countsI0)[3]))
 countsI00[1:20,,]<-countsI0[1:20,,]
-countsI00[21:46,,]<-countsI0[22:47,,]
-countsI00[47:50,,]<-countsI0[49:52,,]
-countsI00[51:57,,]<-countsI0[54:60,,]
-countsI00[58:225,,]<-countsI0[62:229,,]
+countsI00[21:30,,]<-countsI0[22:31,,] # 21
+countsI00[31:45,,]<-countsI0[33:47,,] # 32
+countsI00[46:49,,]<-countsI0[49:52,,] # 48
+countsI00[50:56,,]<-countsI0[54:60,,] # 53
+countsI00[57:113,,]<-countsI0[62:118,,] # 61
+#countsI00[115,,]<-countsI0[120,,] # 119 + #120
+countsI00[114:118,,]<-countsI0[123:127,,] # 121 + #122
+countsI00[119:130,,]<-countsI0[129:140,,] # 128 
+countsI00[131:160,,]<-countsI0[142:171,,] # 141
+countsI00[161:217,,]<-countsI0[173:229,,] # 172
 countsI1 <- countsI00[,,1:4] + countsI00[,,6:9]
 # REMOVE #48 (N227-1981), #21 (N227-1972), #53 (N227-1985). 
 mafsI1 = array(0, dim=c(dim(countsI1)[1],dim(countsI1)[2],dim(countsI1)[3]))
