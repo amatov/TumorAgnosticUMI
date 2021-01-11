@@ -20,6 +20,7 @@ pon_counts <- pon_obj2[["pon"]]
 no0 = array(0, dim=c(dim(pon_counts)[1]-1,dim(pon_counts)[2],dim(pon_counts)[3]))
 no0[1:27,,] <- pon_counts[1:27,,]
 no0[28:45,,]<-pon_counts[29:46,,]
+#no0<-pon_counts
 
 no1 = array(0, dim=c(dim(no0)[1],sum(list),dim(no0)[3]))
 for (i in 1:dim(no0)[1]) {
@@ -41,6 +42,23 @@ for (i in 1:dim(no)[1]) {
 }
 plot(erP1)
 print(erP1)
+
+oL <- erP1[28]
+erP<-vector()
+erP[1:27]<- erP1[1:27]
+erP[28:45] <- erP1[29:46]
+mean(erP) + 3*sd(erP)
+mean(erP1) + 3*sd(erP1)
+oL 
+shapiro.test(erP1)
+shapiro.test(erP)
+
+boxplot(erP1)
+boxplot(erP)
+boxplot(erQ1)
+
+er <- list(errPno28=erP1, errQ1718=erQ1, errI229=erI1, errC90=erC1)
+boxplot(er,notch = TRUE,horizontal = TRUE,border = "brown",col = c("green","blue","red","orange"))
 # QIAGEN healthy samples ############################################################################################
 pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
 countsQ00 <-  piles_to_counts(files = pileupsQ, 
