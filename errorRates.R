@@ -2,6 +2,7 @@ source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R") #1/0 list
 setwd ('~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis')
 source("sw_input_files/duplex_tools.R")
 library("dplyr")
+library("ggpubr")
 pon_hg19 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/call/references/200419_novaseq-xgen-sporacrc-pon.RDS") # 
 
 f3 <- function(a, M, S){
@@ -43,22 +44,98 @@ for (i in 1:dim(no)[1]) {
 plot(erP1)
 print(erP1)
 
-oL <- erP1[28]
-erP<-vector()
-erP[1:27]<- erP1[1:27]
-erP[28:45] <- erP1[29:46]
-mean(erP) + 3*sd(erP)
-mean(erP1) + 3*sd(erP1)
-oL 
-shapiro.test(erP1)
-shapiro.test(erP)
+#oL <- erP1[28]
+#erP<-vector()
+#erP[1:27]<- erP1[1:27]
+#erP[28:45] <- erP1[29:46]
+#mean(erP) + 3*sd(erP)
+#mean(erP1) + 3*sd(erP1)
+#oL 
+#shapiro.test(erP1)
+#shapiro.test(erP)
 
-boxplot(erP1)
-boxplot(erP)
-boxplot(erQ1)
+#boxplot(erP1)
+#boxplot(erP)
+#boxplot(erQ1)
 
 er <- list(errPno28=erP1, errQ1718=erQ1, errI229=erI1, errC90=erC1)
 boxplot(er,notch = TRUE,horizontal = TRUE,border = "brown",col = c("green","blue","red","orange"))
+
+PON<- read_xlsx('~/genomedk/matovanalysis/umiseq_analysis/2020-11-04_PON_age_gender.xlsx')
+PON1 <- list()
+PON1<-PON[1:27,]
+PON11<-rbind(PON1,PON[29:46,])
+age <- list(PON_age =PON11$age, F_age = PON11$age[PON11$gender=="F"], M_age = PON11$age[PON11$gender=="M"] )
+boxplot(age,notch = TRUE,horizontal = TRUE,border = "brown",col = c("blue", "green", "red"))
+
+er1 <- list(ePover53=erP1[PON11$age>53], ePless54=erP1[PON11$age<54])
+boxplot(er1,notch = TRUE,horizontal = TRUE,border = "brown",col = c("blue","red"))
+
+PON1 <- list()
+PON1<-PON[1:27,]
+PON11<-rbind(PON1,PON[29:46,])
+
+p <- ggboxplot(ErrorRates, x = "gender", y = "age",
+               color = "gender", palette = "jco",
+               add = "jitter")
+p + stat_compare_means()
+p + stat_compare_means(method = "t.test")
+IMPROVE <- read_xlsx('~/genomedk/matovanalysis/umiseq_analysis/2020-01-21_IMPROVE_samples_age.xlsx')
+
+erI1 #229
+PON11$age>53
+
+
+CRUK <- read_xlsx('~/genomedk/matovanalysis/umiseq_analysis/2020-01-04_CRUK_sample_status.xlsx')
+CRUKlist <- CRUK$`Biobank label`[CRUK$sequenced=="yes"]#80
+
+listCRUK <- unlist(sapply(CRUKlist, function(x) grep(x, x = pileupsC )))
+pileupsC[listCRUK] # 69
+
+CRUK$pt_age[listCRUK]
+CRUKages <- CRUK$pt_age[listCRUK] # 69
+CRUKages>70 & CRUKages<81
+erC1[CRUKages>80] # 10
+erC1[CRUKages>70 & CRUKages<81] # 25
+erC1[CRUKages>60 & CRUKages<71] # 19
+erC1[CRUKages>50 & CRUKages<61] # 11
+erC1[CRUKages<51] # 4
+
+
+length(IMPROVE$age_at_sample_time)
+length(erI1)
+
+erCI <- list(Int5=c(erC1[CRUKages>80],erI1[IMPROVE$age_at_sample_time>80]), 
+             Int4=c(erC1[CRUKages>70 & CRUKages<81],erI1[IMPROVE$age_at_sample_time>70 & IMPROVE$age_at_sample_time<81]),
+             Int3=c(erC1[CRUKages>60 & CRUKages<71],erI1[IMPROVE$age_at_sample_time>60 & IMPROVE$age_at_sample_time<71]),
+             Int2=c(erC1[CRUKages>50 & CRUKages<61],erI1[IMPROVE$age_at_sample_time>50 & IMPROVE$age_at_sample_time<61]),
+             Int1=c(erC1[CRUKages<51],erI1[IMPROVE$age_at_sample_time<51]))
+boxplot(erCI,notch = TRUE,horizontal = TRUE,border = "brown",col = c("red","orange", "brown","blue","green"))
+
+listCRUKhe <- unlist(sapply(CRUK$`Biobank label`, function(x) grep(x, x = pileupsC[1:8])))#7
+CRUK$pt_age[CRUK$`Biobank label`=="S07A05776D"]#"53"
+erCH <- 2.173574e-05  
+CRUKheAge <- 53
+
+erP1[PON11$age<54]
+
+QIAGEN<- read_xlsx('~/genomedk/matovanalysis/umiseq_analysis/2020-11-04_PON_age_gender.xlsx', sheet = 2)
+qiagenList <- list()
+qiagenList[1:15]<-pileupsQ[1:15]
+qiagenList[16:22]<-pileupsQ[18:24]
+listQiagen <- unlist(sapply(QIAGEN$donor, function(x) grep(x, x = unlist(qiagenList))))#7
+
+#16 and 17 are D415 (#22 in the list) and D1416 (#7 in the list)
+QIAGEN$age
+qAge <- vector()
+qAge[1:15]<-QIAGEN$age[1:15]
+qAge[16:22]<-QIAGEN$age[18:24]
+
+erPQ <- list(Int3=c(erQ1[qAge>60 & qAge<71],erP1[PON11$age>60 & PON11$age<71]),
+             Int2=c(erQ1[qAge>50 & qAge<61],erP1[PON11$age>50 & PON11$age<61],erCH),
+             Int1=c(erQ1[qAge<51],erP1[PON11$age<51]))
+boxplot(erPQ,notch = TRUE,horizontal = TRUE,border = "brown",col = c("brown","blue","green"))
+
 # QIAGEN healthy samples ############################################################################################
 pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
 countsQ00 <-  piles_to_counts(files = pileupsQ, 
@@ -73,16 +150,15 @@ for (i in 1:dim(countsQ0)[1]) {
   p2 <- data.frame(countsQ0[i,,]) 
   p1 <- p2 [list == 1, ] 
   countsQ[i,,] <- data.matrix(p1)
-  #countsQ[i,,][indP]<-NA # blacklist
 }
-countsQ1 <- countsQ[,,1:4] + countsQ[,,6:9] # change to countsQ for core panel
+countsQ1 <- countsQ[,,1:4] + countsQ[,,6:9]  
 erQ1<- vector()
 mafsQ1 = array(0, dim=c(dim(countsQ1)[1],dim(countsQ1)[2],dim(countsQ1)[3]))
 auxMQ <- rowSums(countsQ1, dims = 2) 
 for (i in 1:dim(countsQ1)[1]) {
   #i=2
   mafsQ1[i,,] <- countsQ1[i,,]  /auxMQ[i,]
-  erQ1[i] <- mean(mafsQ1[i,,][mafsQ1[i,,]<= VAFcut], na.rm=T) # ADD BLACKLISTING
+  erQ1[i] <- mean(mafsQ1[i,,][mafsQ1[i,,]<= VAFcut], na.rm=T)  
 }
 plot(erQ1)
 print(erQ1)
@@ -94,7 +170,7 @@ countsI0 <-  piles_to_counts(files = pileupsI[1:213], # DEC 8 noon, there are 61
                              regions = pon_hg19$regions)
 countsI= array(0, dim=c(dim(countsI0)[1],sum(list),dim(countsI0)[3]))
 for (i in 1:dim(countsI0)[1]) {
-  p2 <- data.frame(countsI0[i,,])#CRUK
+  p2 <- data.frame(countsI0[i,,]) 
   p1 <- p2 [list == 1, ] 
   countsI[i,,] <- data.matrix(p1)
 }
@@ -109,7 +185,7 @@ for (i in 1:dim(countsI1)[1]) {
 plot(erI1)
 # CRUK patient samples ##########################################################################################
 pileupsC <- list.files("~/genomedk/PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "bait.pileup")
-countsC0 <-  piles_to_counts(files = pileupsC[1:90], 
+countsC0 <-  piles_to_counts(files = pileupsC[1:90], #pileupsC[listCRUK], #, 
                              regions = pon_hg19$regions)
 countsC= array(0, dim=c(dim(countsC0)[1],sum(list),dim(countsC0)[3]))
 for (i in 1:dim(countsC0)[1]) {
@@ -118,14 +194,14 @@ for (i in 1:dim(countsC0)[1]) {
   countsC[i,,] <- data.matrix(p1)
 }
 countsC1 <- countsC[,,1:4] + countsC[,,6:9]
-erC1<- vector()
+erCH1<- vector()
 mafsC1 = array(0, dim=c(dim(countsC1)[1],dim(countsC1)[2],dim(countsC1)[3]))
 auxMC <- rowSums(countsC1, dims = 2) 
 for (i in 1:dim(countsC1)[1]) {
   mafsC1[i,,] <- countsC1[i,,]  /auxMC[i,]
-  erC1[i] <- mean(mafsC1[i,,][mafsC1[i,,]<= VAFcut])
+  erCH1[i] <- mean(mafsC1[i,,][mafsC1[i,,]<= VAFcut])
 }
-plot(erC1)
+plot(erCH1)
 # DS samples ##################################################################################################
 dat0 <- readRDS("sw_output_files/2020-10-23-145546_sw-output.RDS")  
 pileupsD <- unlist(attributes(dat0))
