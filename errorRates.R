@@ -39,7 +39,7 @@ auxMP <- rowSums(no, dims = 2)
 for (i in 1:dim(no)[1]) {
   #i = 1
   mafsP1[i,,] <- no[i,,]  /auxMP[i,]
-  erP1[i] <- mean(mafsP1[i,,][mafsP1[i,,]<= VAFcut], na.rm=T) # ADD BLACKLISTING
+  erP1[i] <- mean(mafsP1[i,,][mafsP1[i,,]<= VAFcut], na.rm=T)  
 }
 plot(erP1)
 print(erP1)
@@ -170,6 +170,7 @@ countsI0 <-  piles_to_counts(files = pileupsI[1:213], # DEC 8 noon, there are 61
                              regions = pon_hg19$regions)
 countsI= array(0, dim=c(dim(countsI0)[1],sum(list),dim(countsI0)[3]))
 for (i in 1:dim(countsI0)[1]) {
+  countsI0[i,,][indP]<-NA # blacklist
   p2 <- data.frame(countsI0[i,,]) 
   p1 <- p2 [list == 1, ] 
   countsI[i,,] <- data.matrix(p1)
@@ -180,7 +181,7 @@ mafsI1 = array(0, dim=c(dim(countsI1)[1],dim(countsI1)[2],dim(countsI1)[3]))
 auxMI <- rowSums(countsI1, dims = 2) 
 for (i in 1:dim(countsI1)[1]) {
   mafsI1[i,,] <- countsI1[i,,]  /auxMI[i,]
-  erI1[i] <- mean(mafsI1[i,,][mafsI1[i,,]<= VAFcut])
+  erI1[i] <- mean(mafsI1[i,,][mafsI1[i,,]<= VAFcut], na.rm=T) 
 }
 plot(erI1)
 # CRUK patient samples ##########################################################################################
@@ -189,6 +190,7 @@ countsC0 <-  piles_to_counts(files = pileupsC[1:90], #pileupsC[listCRUK], #,
                              regions = pon_hg19$regions)
 countsC= array(0, dim=c(dim(countsC0)[1],sum(list),dim(countsC0)[3]))
 for (i in 1:dim(countsC0)[1]) {
+  countsC0[i,,][indP]<-NA # blacklist
   p2 <- data.frame(countsC0[i,,])#CRUK
   p1 <- p2 [list == 1, ] 
   countsC[i,,] <- data.matrix(p1)
@@ -199,7 +201,7 @@ mafsC1 = array(0, dim=c(dim(countsC1)[1],dim(countsC1)[2],dim(countsC1)[3]))
 auxMC <- rowSums(countsC1, dims = 2) 
 for (i in 1:dim(countsC1)[1]) {
   mafsC1[i,,] <- countsC1[i,,]  /auxMC[i,]
-  erCH1[i] <- mean(mafsC1[i,,][mafsC1[i,,]<= VAFcut])
+  erCH1[i] <- mean(mafsC1[i,,][mafsC1[i,,]<= VAFcut], na.rm=T) 
 }
 plot(erCH1)
 # DS samples ##################################################################################################
@@ -211,6 +213,7 @@ countsD <-  piles_to_counts(files = pileupsD,
                             regions = pon_obj2$regions)
 countsDD= array(0, dim=c(dim(countsD)[1],sum(list),dim(countsD)[3]))
 for (i in 1:dim(countsD)[1]) {
+  countsD[i,,][indP]<-NA # blacklist
   p2 <- data.frame(countsD[i,,])
   p1 <- p2 [list == 1, ] 
   countsDD[i,,] <- data.matrix(p1)
@@ -221,7 +224,7 @@ erD1<- vector()
 auxMD <- rowSums(countsD1, dims = 2) 
 for (i in 1:dim(countsD1)[1]) {
   mafsD1[i,,] <- countsD1[i,,]  /auxMD[i,]
-  erD1[i] <- mean(mafsD1[i,,][mafsD1[i,,]<= VAFcut])
+  erD1[i] <- mean(mafsD1[i,,][mafsD1[i,,]<= VAFcut], na.rm=T)
 }
 plot(erD1)
 ###########################################################################################################
