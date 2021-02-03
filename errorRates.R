@@ -58,8 +58,8 @@ print(erP1)
 #boxplot(erP)
 #boxplot(erQ1)
 
-er <- list(errPno28=erP1, errQ1718=erQ1, errI229=erI1, errC90=erC1)
-boxplot(er,notch = TRUE,horizontal = TRUE,border = "brown",col = c("green","blue","red","orange"))
+er <- list(errPno28=erP1, errQ17=erQ1, errI229=erI1, errC69=erC1[CRUKages>1], errDS8=erD1)
+boxplot(er,notch = TRUE,horizontal = TRUE,border = "brown",col = c("green","blue","red","orange","black"))
 
 PON<- read_xlsx('~/genomedk/matovanalysis/umiseq_analysis/2020-11-04_PON_age_gender.xlsx')
 PON1 <- list()
@@ -140,9 +140,11 @@ boxplot(erPQ,notch = TRUE,horizontal = TRUE,border = "brown",col = c("brown","bl
 pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
 countsQ00 <-  piles_to_counts(files = pileupsQ, 
                               regions = pon_hg19$regions)
-countsQ = array(0, dim=c(dim(countsQ00)[1]-2,dim(countsQ00)[2],dim(countsQ00)[3]))
+#countsQ = array(0, dim=c(dim(countsQ00)[1]-2,dim(countsQ00)[2],dim(countsQ00)[3]))
+countsQ = array(0, dim=c(dim(countsQ00)[1]-1,dim(countsQ00)[2],dim(countsQ00)[3]))
 countsQ[1:16,,] <- countsQ00[1:16,,]
-countsQ[17:22,,]<-countsQ00[19:24,,]
+#countsQ[17:22,,]<-countsQ00[19:24,,]
+countsQ[17:23,,]<-countsQ00[18:24,,]
 countsQ0 <- countsQ
 countsQ= array(0, dim=c(dim(countsQ0)[1],sum(list),dim(countsQ0)[3]))
 for (i in 1:dim(countsQ0)[1]) {
@@ -212,7 +214,13 @@ all(file.exists(pileupsD))
 countsD <-  piles_to_counts(files = pileupsD, 
                             regions = pon_obj2$regions)
 countsDD= array(0, dim=c(dim(countsD)[1],sum(list),dim(countsD)[3]))
+
+founderinfo <- readRDS("200330_founder-mutations-method1.RDS")
+fI<-founderinfo[1:90,]# only the 90 mutations info
+inMu <- fI$index# indexes of the 90 mutations on the panel
+
 for (i in 1:dim(countsD)[1]) {
+  countsD[i,,][inMu]<-NA # panel
   countsD[i,,][indP]<-NA # blacklist
   p2 <- data.frame(countsD[i,,])
   p1 <- p2 [list == 1, ] 
