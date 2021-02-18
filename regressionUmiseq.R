@@ -7,6 +7,25 @@ CRUK <- read.table('~/genomedk/matovanalysis/umiseq_analysis/R/specs_data_cruk-p
 CRUKlist <- which(CRUK$sample_type=="CRC pre-OP" & CRUK$cancer==1)  
 length(CRUKlist) #183 not 130
 ############################# 
+# 45 Subjects of the Control Panel of Normal PON ####################################################################
+pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
+pon_counts <- pon_obj2[["pon"]]
+no0 = array(0, dim=c(dim(pon_counts)[1]-1,dim(pon_counts)[2],dim(pon_counts)[3]))
+no0[1:27,,] <- pon_counts[1:27,,]
+no0[28:45,,]<-pon_counts[29:46,,]
+no1 = array(0, dim=c(dim(no0)[1],sum(list),dim(no0)[3]))
+for (i in 1:dim(no0)[1]) {
+  #i=1
+  p2 <- data.frame(no0[i,,])#PON
+  p1 <- p2 [list == 1, ] 
+  no1[i,,] <- data.matrix(p1)
+}
+no <- no1[,,1:4]+no1[,,6:9]
+mafsP1 = array(0, dim=c(dim(no)[1],sum(list),dim(no)[3]))
+auxMP <- rowSums(no, dims = 2) 
+for (i in 1:dim(no)[1]) {
+  mafsP1[i,,] <- no[i,,]  /auxMP[i,]
+}
 v<-apply(mafsP1,2:3,var) # variance of the counts of each position based on PON
 #v<-apply(mafsP1,2:3,var) # variance of the VAFs of each position based on PON
 v0 <- min(v[v>0])/10000000 # for counts w zero variance, we replace w a very small value
@@ -44,12 +63,7 @@ for (i in 1:dim(countsC1)[1]) {
   mafsC1[i,,] <- countsC1[i,,]  /auxMC[i,]/v1/sum(list)
   mafsC2[i,] <- mafsC1[i,,]/sum(mafsC1[i,,])#
 }
-# 45 Subjects of the Control Panel of Normal PON ####################################################################
-#pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
-#pon_counts <- pon_obj2[["pon"]]
-#no0 = array(0, dim=c(dim(pon_counts)[1]-1,dim(pon_counts)[2],dim(pon_counts)[3]))
-#no0[1:27,,] <- pon_counts[1:27,,]
-#no0[28:45,,]<-pon_counts[29:46,,]
+####################################################################
 no0 <- normalC0
 no1 = array(0, dim=c(dim(no0)[1],sum(list),dim(no0)[3]))
 for (i in 1:dim(no0)[1]) {
@@ -59,22 +73,22 @@ for (i in 1:dim(no0)[1]) {
   no1[i,,] <- data.matrix(p1)
 }
 no <- no1[,,1:4]+no1[,,6:9]
-mafsP1 = array(0, dim=c(dim(no)[1],sum(list),dim(no)[3]))
-mafsP2 = array(0, dim=c(dim(no)[1],sum(list)*dim(no)[3]))
+mafsH1 = array(0, dim=c(dim(no)[1],sum(list),dim(no)[3]))
+mafsH2 = array(0, dim=c(dim(no)[1],sum(list)*dim(no)[3]))
 auxMP <- rowSums(no, dims = 2) 
 no2= array(0, dim=c(dim(no)[1],sum(list)*dim(no)[3]))
 for (i in 1:dim(no)[1]) {
-  mafsP1[i,,] <- no[i,,]  /auxMP[i,]/v1/sum(list)
-  mafsP2[i,] <- mafsP1[i,,]/sum(mafsP1[i,,])
+  mafsH1[i,,] <- no[i,,]  /auxMP[i,]/v1/sum(list)
+  mafsH2[i,] <- mafsH1[i,,]/sum(mafsH1[i,,])
 }
 
 # umiseq 62k COUNTS 95 PreOp CRUK vs 45 PON
 samplesTr = array(0, dim=c((18+48),61860))
-samplesTr <- rbind(mafsP2[1:18,], mafsC2[1:48,])
+samplesTr <- rbind(mafsH2[1:18,], mafsC2[1:48,])
 selectionTr = rep(0, 66)
 selectionTr[19:66]=1
 samplesTe = array(0, dim=c((17+47),61860))
-samplesTe <- rbind(mafsP2[19:35,], mafsC2[49:95,])
+samplesTe <- rbind(mafsH2[19:35,], mafsC2[49:95,])
 selectionTe= rep(0, 64)
 selectionTe[18:64]=1 
 
