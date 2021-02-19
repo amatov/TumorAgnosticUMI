@@ -27,7 +27,6 @@ for (i in 1:dim(no)[1]) {
   mafsP1[i,,] <- no[i,,]  /auxMP[i,]
 }
 v<-apply(mafsP1,2:3,var) # variance of the counts of each position based on PON
-#v<-apply(mafsP1,2:3,var) # variance of the VAFs of each position based on PON
 v0 <- min(v[v>0])/10000000 # for counts w zero variance, we replace w a very small value
 v1<- v
 v1[v==0]=v0
@@ -60,8 +59,8 @@ mafsC1 = array(0, dim=c(dim(countsC1)[1],sum(list),dim(countsC1)[3]))
 mafsC2= array(0, dim=c(dim(countsC1)[1],sum(list)*dim(countsC1)[3]))
 auxMC <- rowSums(countsC1, dims = 2) 
 for (i in 1:dim(countsC1)[1]) {
-  mafsC1[i,,] <- countsC1[i,,]  /auxMC[i,]/v1/sum(list)
-  mafsC2[i,] <- mafsC1[i,,]/sum(mafsC1[i,,])#
+  mafsC1[i,,] <- countsC1[i,,]  /auxMC[i,]/v1/sum(list) # Weight 1
+  mafsC2[i,] <- mafsC1[i,,]/sum(mafsC1[i,,]) # Normalize 
 }
 ####################################################################
 no0 <- normalC0
@@ -75,11 +74,11 @@ for (i in 1:dim(no0)[1]) {
 no <- no1[,,1:4]+no1[,,6:9]
 mafsH1 = array(0, dim=c(dim(no)[1],sum(list),dim(no)[3]))
 mafsH2 = array(0, dim=c(dim(no)[1],sum(list)*dim(no)[3]))
-auxMP <- rowSums(no, dims = 2) 
+auxMH <- rowSums(no, dims = 2) 
 no2= array(0, dim=c(dim(no)[1],sum(list)*dim(no)[3]))
 for (i in 1:dim(no)[1]) {
-  mafsH1[i,,] <- no[i,,]  /auxMP[i,]/v1/sum(list)
-  mafsH2[i,] <- mafsH1[i,,]/sum(mafsH1[i,,])
+  mafsH1[i,,] <- no[i,,]  /auxMH[i,]/v1/sum(list) # Weight 1
+  mafsH2[i,] <- mafsH1[i,,]/sum(mafsH1[i,,]) # Normalize 
 }
 
 # umiseq 62k COUNTS 95 PreOp CRUK vs 45 PON
@@ -92,6 +91,8 @@ samplesTe <- rbind(mafsH2[19:35,], mafsC2[49:95,])
 selectionTe= rep(0, 64)
 selectionTe[18:64]=1 
 
+for (i in 1:95){print(sum(countsC0[i,,]))} # check there are no empty files
+for (i in 1:35){print(sum(normalC0[i,,]))} # check there are no empty files
 # run #####
 cvm = cv.glmnet(samplesTr, selectionTr, family = "binomial", alpha=1, nfolds=10) 
 
