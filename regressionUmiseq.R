@@ -1,44 +1,29 @@
 library("glmnet")
-source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R") #1/0 list
-
-# add new flags; number of fragments, age, gender, concentration, 10 flags
-
-CRUK <- read.table('~/genomedk/matovanalysis/umiseq_analysis/R/specs_data_cruk-plasma-info.lst', header = T)
-CRUKlist <- which(CRUK$sample_type=="CRC pre-OP" & CRUK$cancer==1)  
-length(CRUKlist) #183 not 130
+source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/R/read_bed.R") #1/0 list
 ############################# 
 # 45 Subjects of the Control Panel of Normal PON ####################################################################
 pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
 pon_counts <- pon_obj2[["pon"]]
-no0 = array(0, dim=c(dim(pon_counts)[1]-1,dim(pon_counts)[2],dim(pon_counts)[3]))
-no0[1:27,,] <- pon_counts[1:27,,]
-no0[28:45,,]<-pon_counts[29:46,,]
-no1 = array(0, dim=c(dim(no0)[1],sum(list),dim(no0)[3]))
-for (i in 1:dim(no0)[1]) {
-  #i=1
-  p2 <- data.frame(no0[i,,])#PON
+pno0 = array(0, dim=c(dim(pon_counts)[1]-1,dim(pon_counts)[2],dim(pon_counts)[3]))
+pno0[1:27,,] <- pon_counts[1:27,,]
+pno0[28:45,,]<-pon_counts[29:46,,]
+pno1 = array(0, dim=c(dim(pno0)[1],sum(list),dim(pno0)[3]))
+for (i in 1:dim(pno0)[1]) {
+  p2 <- data.frame(pno0[i,,])#PON
   p1 <- p2 [list == 1, ] 
-  no1[i,,] <- data.matrix(p1)
+  pno1[i,,] <- data.matrix(p1)
 }
-no <- no1[,,1:4]+no1[,,6:9]
-mafsP1 = array(0, dim=c(dim(no)[1],sum(list),dim(no)[3]))
-auxMP <- rowSums(no, dims = 2) 
-for (i in 1:dim(no)[1]) {
-  mafsP1[i,,] <- no[i,,]  /auxMP[i,]
+pno <- pno1[,,1:4]+pno1[,,6:9]
+mafsP1 = array(0, dim=c(dim(pno)[1],sum(list),dim(pno)[3]))
+auxMP <- rowSums(pno, dims = 2) 
+for (i in 1:dim(pno)[1]) {
+  mafsP1[i,,] <- pno[i,,]  /auxMP[i,]
 }
-v<-apply(mafsP1,2:3,var) # variance of the counts of each position based on PON
+v<-apply(mafsP1,2:3,var) # variance of the VAFs of each position based on PON
 v0 <- min(v[v>0])/10000000 # for counts w zero variance, we replace w a very small value
 v1<- v
 v1[v==0]=v0
 #######################################################################################################################################
-#pileupsC <- list.files("~/genomedk/PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "bait.pileup")
-#CRUK <- read_xlsx('~/genomedk/matovanalysis/umiseq_analysis/2020-01-04_CRUK_sample_status.xlsx')
-#CRUKlist <- CRUK$`Biobank label`[CRUK$sequenced=="yes"]#80
-
-#listCRUK <- unlist(sapply(CRUKlist, function(x) grep(x, x = pileupsC[45:152] )))
-#pileupsC[45:152] [listCRUK]  
-
-#countsC0 <-  piles_to_counts(files = pileupsC[45:152] [listCRUK]  , regions = pon_obj2$regions)
 countsC00 <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cruk-counts.RDS") # 
 countsC0= array(0, dim=c(95,dim(countsC00)[2],dim(countsC00)[3]))
 countsC0[1:69,,]<-countsC00[2:70,,]
@@ -110,5 +95,5 @@ final <- cbind(selectionTe, pred)
 final
 plot(final)
 ########################################################################################
-plot(final[1:22,2],ylim=c(0.0066,0.0073))
- 
+plot(final[1:17,2])
+plot(final[18:64,2])
