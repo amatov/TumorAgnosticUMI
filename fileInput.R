@@ -1,6 +1,3 @@
-#Setwd as need for you
-setwd("~/projects/pileup/specs/data")
-
 #counts array, genome version taken cared of
 cruk <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cruk-counts.RDS") # 
 dimnames(cruk)[[1]] #The pileup names are the first dim
