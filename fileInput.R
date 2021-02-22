@@ -52,7 +52,7 @@ all(file.exists(tmp)) #check that you can find the file (should be TRUE)
 params <- file.path(sub("output.+", "", tmp), "param.json")
 all(file.exists(params)) #Check!
 
-#NOW you can make a new column with genome vesion by looking for hg19 and hg38 in the param.json
+#we can make a new column with genome vesion by looking for hg19 and hg38 in the param.json
 #The first way beloq requires the jsonlite library and is safest.
 #The second also works way also works and can be done in base R.
 info$version <- sapply(params, function(p) gsub(".+((hg19)|(hg38)).+", "\\1", tolower(jsonlite::read_json(p)$reference$reference)), USE.NAMES = F)
