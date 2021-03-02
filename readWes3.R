@@ -120,8 +120,6 @@ mahaCancer <- maha[1:37] # 37 of 45 , w 8 cancers w VAFs 0
 mahaControl <- c(mahaT, mahaT2) # 1575 (45x15+45x20)
 
 #ROC; find where overall success rate numbers are
-#condition <- rbind(array(1, dim=c(79,12)), array(0, dim=c(74,12)))
-#pred <- prediction(c(mahaCancer, mahaControl), condition, label.ordering = c(0, 1))  
 rocTF = rep(0, (37+45*15+45*20))
 rocTF[1:37]=1
 pred <- prediction(c(mahaCancer, mahaControl), rocTF)
@@ -129,6 +127,7 @@ perf<-performance(pred,"tpr", "fpr")
 plot(perf)
 auc<- performance(pred,"auc")
 auc
+##########################AUC#######################################################################
 pROC_obj <- roc(rocTF,c(mahaCancer, mahaControl),
                 smoothed = TRUE,
                 # arguments for ci
@@ -140,12 +139,10 @@ pROC_obj <- roc(rocTF,c(mahaCancer, mahaControl),
 
 sens.ci <- ci.se(pROC_obj)
 plot(sens.ci, type="shape", col="lightblue")
-
 ## Warning in plot.ci.se(sens.ci, type = "shape", col = "lightblue"): Low
 ## definition shape.
-
 plot(sens.ci, type="bars")
-
+################################################################################
 
 adenoma_list <- info[ grepl("adenom", info$sample_type), "i" ] # 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 91
 mahaA <- vector()
@@ -165,29 +162,6 @@ for (i in control_list){
   j = j + 1
 }
 plot(mahaH) # controls
-
-
-#maha1 <- vector()
-#maha1 [1:69]<- maha[2:70] 
-#maha1 [70:95] <- maha[105:130]
-#plot(maha1)
-
-
-######################################################################################
-mahaAll <- vector()
-for (i in 1:130){
-  maha[i] <- sum(countsW[i,,]* mafsC[i,,]/v1,  na.rm=T) # should be VAF mafsC[i,,]) #
-  
-  #aux <- sum(countsW[6,,]*countsC001[i,,]/v1,  na.rm=T) # should be VAF mafsC[i,,]) #
-  # for countsC001 #6 [1] 142
-  print(maha[i])
-  # devide by PON var each pos
-}
-plot(mahaAll)
-mahaAllCancer <- vector()
-mahaAllCancer [1:69]<- mahaAll[2:70] 
-mahaAllCancer [70:95] <- mahaAll[105:130]
-plot(mahaAllCancer)
 
 ############## RDS 95 cancer, 20 adenoma, 15 control #####################################################
 sitemutPON # mutation map 15k x 4 for each position of the core panel
@@ -210,126 +184,6 @@ scores <- array(0,dim=c(dim(mafsC1)[1],dim(mafsC1)[1]))
 plasma$ind <- sapply(as.character(sitemutPON), function(s) which(cancer_SNPs$sitemut_hg38 %in% s)) # INDEX IN COUNTS MATRIX OF MUTATIONS
 plasma$i <- sapply(as.character(plasma$sitemut_hg38), function(s) which(sitemut %in% s))
 
-# extract the sample name from the first pileup list in dimnames
 
-
-j=1
-k = 3
-for (i in 1:k){
-i=1
-aux <- mafsC1[j,,] # plasma sample 
-which(grepl(plasma$library_id[r], pileups)), , ]
-mafScore <- aux[sitemutPON == chr5:112815487]  #cancer_SNPs$sitemut_hg38[i]]
-scores
-}
-#####################################################################################
 countsW <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cruki.RDS") # 
 
-
-
-
-# IMPROVE WES data ###################################################################################
-wes <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/201123_wes-spora-mutations-improve.csv", header = TRUE) # HG38
-pts <- unique(wes$pt_id)
-# IMPROVE clinical data ###################################################################################
-ItW <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/IMPROVEptList",header = TRUE)
-ItW$index <- sapply(as.character(ItW$library_id), function(x) grep(x, pileupsIw))  
-#################################################################
-wes_id <- ItW$pt_id %in% pts
-preop_i <- ItW[(ItW$op_time_cat == -1)&wes_id, "index"] # 57 of which 44 have WES
-posop14_i <- ItW[ (ItW$op_time_cat == 2)&wes_id, "index"] # 42
-posop30_i <- ItW[ (ItW$op_time_cat == 30)&wes_id, "index"] # 42
-countsIw <-  piles_to_counts(files = pileupsIw[preop_i], regions = pon_obj2$regions) # PREOP, POSTOP14, POSTOP30
-countsW <- countsIw[,,1:4] + countsIw[,,6:9]
-mafsW= array(0, dim=c(dim(countsW)[1],dim(countsW)[2],dim(countsW)[3]))
-auxM <- rowSums(countsW, dims = 2) 
-for (i in 1:dim(countsW)[1]) {
-  i=1
-  mafsW[i,,] <- countsW[i,,]  /auxM[i,]
-}
-#################################################################
-ww = array(0, dim=c(dim(co)[1],dim(co)[2],dim(co)[3]))
-sc<- vector()
-for (i in 1:dim(mafsW)[1]) { 
-  for (j in 1:length(pts)) {  
-    if (grepl(as.character(pts[j]), as.character(pileupsIw[preop_i][i]))) { # for pts with WES data
-      wesP <- wes[wes==pts[j],] # find the mutations in WES
-      mu <- wesP$sitemut_hg38 # look up the indexes in the sitemut panel
-      for (k in 1:length(mu)) { # computer for all WES mutations for this sample
-        auxW <- mafsW[i,,]
-        iW <- sitemut == mu[k] 
-        ww[k] <- auxW[iW]/vo1[iW]*prior11[iW] # VAF divided by PON variance & weighted by Cosmic
-      }
-      sc[j] <- sum(ww)/length(mu) # mutation score per patient
-    }
-  }
-}
-###############plot mutation score########################################################
-r1<- min(log2(sw))-1
-r2 <- max(log2(sw))+1
-plot(log2(sw), ylim=range(c(r1,r2)), col="green", pch = 17)
-###### debug ########
-#sapply(as.character(pts), function(x) grep(x, pileupsIw[preop_i])) 
-#wes_id <- intersect(ItW$pt_id, pts)
-#ItW$index <- sapply(as.character(ItW$library_id), function(x) grep(x, pileupsIw)) 
-########## mutations for PON1 subject ################
-wesP <- wes[wes==pts[1],]
-m1 <- wesP$sitemut_hg38[1]
-#chr17:7675235_T/C
-#chr3:179218294_G/A
-#chr7:140753336_A/T
-sum(sitemut == "chr17:7675235_T/C") # 1
-sum(sitemut == m1) # 1
-which(sitemut == m1)# 50720
-sitemut[which(sitemut == m1)] # "chr17:7675235_T/C"
-
-########VERSIO 2########################################################################
-### Intersect WES mutations with plasma and calculate score ###-----------------
-library("dplyr")
-
-wes <- read.table("~/genomedk/N140_Targeting/specs/umiseq_paper/data/201123_wes-spora-mutations-improve.csv", header = TRUE) # HG38
-plasma <- read.table("~/genomedk/N140_Targeting/specs/umiseq_paper/data/IMPROVEptList", header = TRUE)
-prior <- readRDS("~/genomedk/N140_Targeting/specs/specs_analysis/sw_input_files/180903_prior.RDS")[, 1:4]
-pon38 <- readRDS("~/genomedk/N140_Targeting/specs/umiseq_paper/reference/201020_hg38-novaseq-xgen-sporacrc-pon.RDS")
-pon19 <- readRDS("~/genomedk/N140_Targeting/specs/umiseq_paper/reference/200419_novaseq-xgen-sporacrc-pon.RDS")
-
-#Add sitemut_hg38 to plasma table (overwrite plasma)
-plasma <- dplyr::left_join(plasma, wes[, c("pt_id", "sitemut_hg38")])
-plasma <- plasma[!is.na(plasma$sitemut_hg38), ] #Exclude samples with no sitemut
-
-
-#Add the index for the 18094*4 panel matrix
-sitemut <- t(apply(pon38$coordinates, 1, function(x){
-  paste( paste0(trimws(x[1]), ":", trimws(x[2]), "_"),
-         paste(x[3] ,c("A", "T", "C", "G"), sep = "/"),
-         sep = "")}))
-
-plasma$i <- sapply(as.character(plasma$sitemut_hg38), function(s) which(sitemut %in% s))
-
-#Get the pileups
-pileups <- list.files("~/genomedk/IMPROVE/sporacrc/N227", recursive = T, full.names = T, pattern = "consensus.bait.pileup$")
-pileups <- unique(pileups[sapply(plasma$library_id, function(l)which(grepl(l, pileups)))]) #Only get pileups needed
-
-#Make counts assuming hg19 (otherwise, split for hg19 and hg38)
-tmp <- piles_to_counts(pileups, pon19$regions)
-counts <- tmp[,,1:4] + tmp[,,6:9]
-mafs <- abind::abind( lapply(1:dim(counts)[[1]], function(s)(counts[s,,]/rowSums(counts[s,,]))), along = 0)
-vars <- apply(counts, 2:3, var) # variance of the counts of each position based on PON
-vars[ vars == 0 ] <- 1e-6
-
-
-#Calculate f1 per sitemut (row in plasma)
-f1 <- function(maf, pon_var, prior)prior * maf/pon_var # VAF divided by PON variance & weighted by Cosmic
-
-plasma$score <-
-  sapply(1:nrow(plasma), function(r) {
-    maf0 <- mafs[ which(grepl(plasma$library_id[r], pileups)), , ][ plasma$i[r] ]  
-    pon_var0 <- vars[ plasma$i[r] ]
-    prior0 <- prior[ plasma$i[r] ]
-    f1(maf0, pon_var0, prior0 )
-  })
-
-#Then sum score for each library_id (overwrite plasma)
-plasma <-
-  dplyr::group_by(plasma, library_id) %>%
-  dplyr::mutate(sum = sum(score))
