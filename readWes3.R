@@ -178,6 +178,19 @@ plot(sens.ci, type="shape", col="lightblue")
 ## Warning in plot.ci.se(sens.ci, type = "shape", col = "lightblue"): Low
 ## definition shape.
 plot(sens.ci, type="bars")
+
+dimnames(countsC00)[[1]][cancer_list[which(maha==0)]]
+#[1] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/6678/C28A06678D_cfdna_N289-21___200630bix195220/output/C28A06678D_cfdna_N289-21_consensus.bait.pileup"
+#[2] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/6721/C23A06721D_cfdna_N289-25___200630vyr195214/output/C23A06721D_cfdna_N289-25_consensus.bait.pileup"
+#[3] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/6780/C36A06780D_cfdna_N289-31___200630myl195228/output/C36A06780D_cfdna_N289-31_consensus.bait.pileup"
+#[4] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/6792/C62A06792D_cfdna_N289-33___200630qev195246/output/C62A06792D_cfdna_N289-33_consensus.bait.pileup"
+#[5] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/6901/C54A06901D_cfdna_N289-41___200630wuj195243/output/C54A06901D_cfdna_N289-41_consensus.bait.pileup"
+#[6] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/7037/C43A07037D_cfdna_N289-63___200630wil195235/output/C43A07037D_cfdna_N289-63_consensus.bait.pileup"
+#[7] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/7117/C17A07117D_cfdna_N289-71___200630pit195212/output/C17A07117D_cfdna_N289-71_consensus.bait.pileup"
+#[8] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/7334/C42A07334D_cfdna_N289-87___200921zan150711/output/C42A07334D_cfdna_N289-87_consensus.bait.pileup"
+
+
+
 ##############################SW##################################################
 
 # CRUK control 8 samples
