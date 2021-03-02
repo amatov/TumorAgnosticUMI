@@ -139,9 +139,9 @@ for (i in cancer_list){
   maha[j] <- sum(countsW[i,,]* mafsC[i,,]/v1,  na.rm=T) / sum(countsW[i,,])/sum(mafsC[k,,],  na.rm=T)#45 of 95 cancers have WES, of them 37 have VAF>0
   print(sum(countsW[i,,]))
 # maha[i] <- sum(countsW[6,,]* mafsC[i,,]/v1,  na.rm=T) # should be VAF mafsC[i,,]) #
-#  if (maha[j]>0) {
+if (maha[j]>0) {
 j = j + 1
- # }
+  }
 #aux <- sum(countsW[6,,]*countsC001[i,,]/v1,  na.rm=T) # should be VAF mafsC[i,,]) #
 # for countsC001 #6 [1] 142
 # devide by PON var each pos
