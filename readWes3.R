@@ -81,7 +81,7 @@ j=1
 for (i in cancer_list){
   #i = 6
   for (k in control_list){
-    mahaT[j] <- sum(countsW[i,,]* mafsC[k,,]/v1,  na.rm=T)
+    mahaT[j] <- sum(countsW[i,,]* mafsC[k,,]/v1,  na.rm=T)/sum(countsW[i,,])
     j = j + 1
   }
   print(mahaT)
@@ -94,7 +94,7 @@ j=1
 for (i in cancer_list){
   #i = 6
   for (k in adenoma_list){
-    mahaT2[j] <- sum(countsW[i,,]* mafsC[k,,]/v1,  na.rm=T)
+    mahaT2[j] <- sum(countsW[i,,]* mafsC[k,,]/v1,  na.rm=T)/sum(countsW[i,,])
     j = j + 1
   }
   print(mahaT2)
@@ -105,23 +105,27 @@ plot(mahaT2)
 maha <- vector()
 j=1
 for (i in cancer_list){
-maha[j] <- sum(countsW[i,,]* mafsC[i,,]/v1,  na.rm=T) # should be VAF mafsC[i,,]) #45 of 95 cancers have WES, of them 38 have VAF>0
+  maha[j] <- sum(countsW[i,,]* mafsC[i,,]/v1,  na.rm=T) / sum(countsW[i,,])#45 of 95 cancers have WES, of them 37 have VAF>0
+  print(sum(countsW[i,,]))
 # maha[i] <- sum(countsW[6,,]* mafsC[i,,]/v1,  na.rm=T) # should be VAF mafsC[i,,]) #
   if (maha[j]>0) {
 j = j + 1
-}
+  }
 #aux <- sum(countsW[6,,]*countsC001[i,,]/v1,  na.rm=T) # should be VAF mafsC[i,,]) #
 # for countsC001 #6 [1] 142
 print(maha)
 # devide by PON var each pos
 }
-plot(maha) # Cancer samples with VAF>0
 mahaCancer <- maha[1:37] # 37 of 45 , w 8 cancers w VAFs 0
-mahaControl <- c(mahaT, mahaT2) # 1575 (45x15+45x20)
+plot(mahaCancer) # Cancer samples with VAF>0
 
+mahaControl <- c(mahaT, mahaT2) # 1575 (45x15+45x20)
+plot(mahaT2,ylim=range(c(0,60)))
+plot(mahaT,ylim=range(c(0,60)))
 #ROC; find where overall success rate numbers are
 rocTF = rep(0, (37+45*15+45*20))
 rocTF[1:37]=1
+
 pred <- prediction(c(mahaCancer, mahaControl), rocTF)
 perf<-performance(pred,"tpr", "fpr")
 plot(perf)
