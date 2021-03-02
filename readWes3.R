@@ -179,7 +179,7 @@ plot(sens.ci, type="shape", col="lightblue")
 ## definition shape.
 plot(sens.ci, type="bars")
 
-dimnames(countsC00)[[1]][cancer_list[which(maha==0)]]
+dimnames(countsC00)[[1]][cancer_list[which(mahaFull==0)]]
 #[1] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/6678/C28A06678D_cfdna_N289-21___200630bix195220/output/C28A06678D_cfdna_N289-21_consensus.bait.pileup"
 #[2] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/6721/C23A06721D_cfdna_N289-25___200630vyr195214/output/C23A06721D_cfdna_N289-25_consensus.bait.pileup"
 #[3] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/6780/C36A06780D_cfdna_N289-31___200630myl195228/output/C36A06780D_cfdna_N289-31_consensus.bait.pileup"
@@ -189,7 +189,8 @@ dimnames(countsC00)[[1]][cancer_list[which(maha==0)]]
 #[7] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/7117/C17A07117D_cfdna_N289-71___200630pit195212/output/C17A07117D_cfdna_N289-71_consensus.bait.pileup"
 #[8] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/7334/C42A07334D_cfdna_N289-87___200921zan150711/output/C42A07334D_cfdna_N289-87_consensus.bait.pileup"
 
-
+# control#1 is also HG19 
+#[1] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/421486/S07A05776D_cfdna_N289-101___200921wyw150716/output/S07A05776D_cfdna_N289-101_consensus.bait.pileup"
 
 ##############################SW##################################################
 
