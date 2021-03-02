@@ -40,7 +40,7 @@ tmp <- info[ nchar(sub(p, "\\1\\2", info$sitemut_hg38)) == 0, ]
 
 #Remove those with no mutations (controls)
 cancer_SNPs <- tmp[!is.na(tmp$sitemut_hg38), ]
-
+#info$sitemut_hg38
 #If you need the genome version find it in the pipeline parameter file param.json
 #If /path/to/sample/output/pileup then /path/to/sample/param.json
 #If want to access param.json locally you need change the paths - I need to change
@@ -57,3 +57,60 @@ all(file.exists(params)) #Check!
 #The second also works way also works and can be done in base R.
 info$version <- sapply(params, function(p) gsub(".+((hg19)|(hg38)).+", "\\1", tolower(jsonlite::read_json(p)$reference$reference)), USE.NAMES = F)
 info$version <- sapply(params, function(x)sub(".+((hg19)|(hg38)).+", "\\1", paste(readLines(x), collapse = "")), USE.NAMES = F)
+
+cruk <- readRDS("~/projects/pileup/specs/data/cruk-counts.RDS")
+info <- read.table("~/projects/pileup/specs/data/cruk-plasma-info.lst",
+                   header = T, stringsAsFactors = F)
+
+#Add the index in cruk for row in info
+info$i <- sapply(info$pileup, grep, dimnames(cruk)[[1]])
+
+#Intitate with FALSE cruk indexing array same dim as cruk except 4 bases
+cruki <-
+  array(rep(F, dim(cruk)[1]*dim(cruk)[2]*4),
+        dim = list(dim(cruk)[1], dim(cruk)[2], 4),
+        dimnames = list(dimnames(cruk)[[1]], dimnames(cruk)[[2]], dimnames(cruk)[[3]][1:4])
+  )
+dim(cruki)
+dimnames(cruki)
+
+#Sitemut panel in the "chr:pos_ref/alt" format
+pon <- readRDS("~/genomedk/IMPROVE/call/references/201217_hg38-novaseq-xgen-sporacrc-pon.RDS")
+
+sitemut_panel <-
+  t(apply(pon$coordinates, 1, function(x){
+    paste( paste0(trimws(x[1]), ":", trimws(x[2]), "_",
+                  trimws(x[3]), "/", dimnames(cruki)[[3]]))}))
+
+#The index of, say, info$sitemut_hg38[100], in every 18094*4 matrix
+#(be that maf, counts, posterior or noise - if made this way) is
+i0 <- grep(info$sitemut_hg38[100], sitemut_panel)
+
+#Which is found in cruki (for patient defined by column i) and set to 1 as:
+cruki[ info$i[100], , ][i0] <- 1
+
+#Do this for all rows in info using apply or loop (as here)
+p <- ".+:[[:digit:]]+_.(.)*/.(.)*" #Pattern to grap indels
+
+for(row in 1:nrow(info)) {
+  if(! is.na(info$sitemut_hg38[row]) ) {
+    if(nchar(sub(p, "\\1\\2", info$sitemut_hg38[row])) == 0) {
+      i0 <- grep(info$sitemut_hg38[row], sitemut_panel)
+      cruki[ info$i[row], , ][i0] <- 1
+    }
+  }
+}
+
+sum(cruki) #114 mutations placed (INDELS removed)
+
+#But lets manually sanity check for pt 7007 who has 2 simpel SNPs and a single DEL
+info[info$pt_id %in% "7007", c("pt_id", "sitemut_hg38", "i")] #slice 56
+i0 <- grep(c("chr5:112838934_C/T|chr17:7674221_G/C"), sitemut_panel)
+cruki[56, , ][i0]
+sum(cruki[56, , ]) == 2
+
+#Look at the first mutation in its row/col surroundings
+i0 <- which(sitemut_panel == c("chr5:112838934_C/T"), arr.ind = T)
+cruki[56, , ][(i0[1]-5):(i0[1]+5), ]
+
+saveRDS(cruki, "~/tmp/cruki.RDS")
