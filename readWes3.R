@@ -35,6 +35,35 @@ sitemut <- t(apply(pon_obj2$coordinates, 1, function(x){
          sep = "")}))
 #dfS <- data.frame(sitemut) 
 #sitemutPON <- dfS[list == 1,] 
+###########QIAGEN
+# QIAGEN healthy samples ############################################################################################
+pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
+countsQ00 <-  piles_to_counts(files = pileupsQ, 
+                              regions = pon_obj2$coordinates)
+#countsQ = array(0, dim=c(dim(countsQ00)[1]-2,dim(countsQ00)[2],dim(countsQ00)[3]))
+countsQ = array(0, dim=c(dim(countsQ00)[1]-1,dim(countsQ00)[2],dim(countsQ00)[3]))
+countsQ[1:16,,] <- countsQ00[1:16,,]
+#countsQ[17:22,,]<-countsQ00[19:24,,]
+countsQ[17:23,,]<-countsQ00[18:24,,]
+countsQ0 <- countsQ
+countsQ= array(0, dim=c(dim(countsQ0)[1],sum(list),dim(countsQ0)[3]))
+for (i in 1:dim(countsQ0)[1]) {
+  countsQ0[i,,][indP]<-NA # blacklist
+  p2 <- data.frame(countsQ0[i,,]) 
+  p1 <- p2 [list == 1, ] 
+  countsQ[i,,] <- data.matrix(p1)
+}
+countsQ1 <- countsQ[,,1:4] + countsQ[,,6:9]  
+erQ1<- vector()
+mafsQ1 = array(0, dim=c(dim(countsQ1)[1],dim(countsQ1)[2],dim(countsQ1)[3]))
+auxMQ <- rowSums(countsQ1, dims = 2) 
+for (i in 1:dim(countsQ1)[1]) {
+  #i=2
+  mafsQ1[i,,] <- countsQ1[i,,]  /auxMQ[i,]
+  erQ1[i] <- mean(mafsQ1[i,,][mafsQ1[i,,]<= VAFcut], na.rm=T)  
+}
+plot(erQ1)
+print(erQ1)
 # cruk plasma data ##################################################################################################
 countsC00 <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cruk-counts.RDS") # 
 countsC001 <- countsC00[,,1:4] + countsC00[,,6:9]
@@ -83,10 +112,10 @@ j=1
 for (i in cancer_list){
   #i = 6
   for (k in control_list){
-    mahaT[j] <- sum(countsW[i,,]* mafsC[k,,]/v1,  na.rm=T)/sum(countsW[i,,])
+    mahaT[j] <- sum(countsW[i,,]* mafsC[k,,]/v1,  na.rm=T)/sum(countsW[i,,])/sum(mafsC[k,,],  na.rm=T)
     j = j + 1
   }
-  print(mahaT)
+  #print(mahaT)
 }
 length(mahaT)
 plot(mahaT)
@@ -96,10 +125,10 @@ j=1
 for (i in cancer_list){
   #i = 6
   for (k in adenoma_list){
-    mahaT2[j] <- sum(countsW[i,,]* mafsC[k,,]/v1,  na.rm=T)/sum(countsW[i,,])
+    mahaT2[j] <- sum(countsW[i,,]* mafsC[k,,]/v1,  na.rm=T)/sum(countsW[i,,])/sum(mafsC[k,,],  na.rm=T)
     j = j + 1
   }
-  print(mahaT2)
+  #print(mahaT2)
 }
 length(mahaT2)
 plot(mahaT2)
@@ -107,25 +136,26 @@ plot(mahaT2)
 maha <- vector()
 j=1
 for (i in cancer_list){
-  maha[j] <- sum(countsW[i,,]* mafsC[i,,]/v1,  na.rm=T) / sum(countsW[i,,])#45 of 95 cancers have WES, of them 37 have VAF>0
+  maha[j] <- sum(countsW[i,,]* mafsC[i,,]/v1,  na.rm=T) / sum(countsW[i,,])/sum(mafsC[k,,],  na.rm=T)#45 of 95 cancers have WES, of them 37 have VAF>0
   print(sum(countsW[i,,]))
 # maha[i] <- sum(countsW[6,,]* mafsC[i,,]/v1,  na.rm=T) # should be VAF mafsC[i,,]) #
-  if (maha[j]>0) {
+#  if (maha[j]>0) {
 j = j + 1
-  }
+ # }
 #aux <- sum(countsW[6,,]*countsC001[i,,]/v1,  na.rm=T) # should be VAF mafsC[i,,]) #
 # for countsC001 #6 [1] 142
-print(maha)
 # devide by PON var each pos
-}
+} 
+print(maha)
+
 mahaCancer <- maha[1:37] # 37 of 45 , w 8 cancers w VAFs 0
 plot(mahaCancer) # Cancer samples with VAF>0
 
-mahaControl <- c(mahaT, mahaT2) # 1575 (45x15+45x20)
-plot(mahaT2,ylim=range(c(0,60)))
-plot(mahaT,ylim=range(c(0,60)))
+mahaControl <- c(mahaT)#, mahaT2) # 1575 (45x15+45x20)
+plot(mahaT2,ylim=range(c(0,0.0035)))
+plot(mahaT,ylim=range(c(0,0.0035)))
 #ROC; find where overall success rate numbers are
-rocTF = rep(0, (37+45*15+45*20))
+rocTF = rep(0, (37+45*15))#+45*20))
 rocTF[1:37]=1
 
 pred <- prediction(c(mahaCancer, mahaControl), rocTF)
