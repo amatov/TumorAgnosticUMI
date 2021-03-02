@@ -179,6 +179,9 @@ plot(sens.ci, type="shape", col="lightblue")
 ## definition shape.
 plot(sens.ci, type="bars")
 
+# highest Youden’s score index 9: max (sensitivity + specificity-1) = 1.6568 for .9 specificity/1-FP(10%) and .7568 sensitivity/TP(75.68%)
+
+
 dimnames(countsC00)[[1]][cancer_list[which(mahaFull==0)]]
 #[1] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/6678/C28A06678D_cfdna_N289-21___200630bix195220/output/C28A06678D_cfdna_N289-21_consensus.bait.pileup"
 #[2] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/6721/C23A06721D_cfdna_N289-25___200630vyr195214/output/C23A06721D_cfdna_N289-25_consensus.bait.pileup"
