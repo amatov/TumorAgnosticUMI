@@ -2,6 +2,8 @@ library("dplyr")
 library("glmnet")
 source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R") #1/0 list
 # add new flags; number of fragments, age, gender, concentration, 10 flags
+library(GenomicRanges)
+source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/tools.R")
 # 45 Subjects of the Control Panel of Normal PON ####################################################################
 pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
 pon_counts <- pon_obj2[["pon"]]
@@ -146,7 +148,21 @@ plot(sens.ci, type="shape", col="lightblue")
 ## Warning in plot.ci.se(sens.ci, type = "shape", col = "lightblue"): Low
 ## definition shape.
 plot(sens.ci, type="bars")
-################################################################################
+##############################SW##################################################
+
+# CRUK control 8 samples
+#pileupsC <- list.files("G:\\PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "bait.pileup")
+pileupsC <- list.files("~/genomedk/PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "bait.pileup")
+resCRUK <- lapply(pileupsC[1:8], FUN = function(x) sw_piles(pileup = pileupsC[1:8], pon = pon_obj2$pon, regions = pon_obj2$regions, prior = 0.5, model = "AND")) #Write the parameters instead of ...
+names(resCRUK) <- basename(pileupsC[1:8])
+saveRDS (resCRUK, "~/genomedk/matovanalysis/umiseq_analysis/CRUKcontrols/2020_11_06_CRUK_8CTL_SW.RDS")
+
+
+
+
+
+
+
 
 adenoma_list <- info[ grepl("adenom", info$sample_type), "i" ] # 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 91
 mahaA <- vector()
