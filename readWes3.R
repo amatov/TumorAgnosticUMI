@@ -1,6 +1,9 @@
 library("dplyr")
 library("glmnet")
 source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R") #1/0 list
+library("ggplot2")
+library("precrec")
+library("ROCit")
 # add new flags; number of fragments, age, gender, concentration, 10 flags
 library(GenomicRanges)
 source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/tools.R")
@@ -25,7 +28,7 @@ for (i in 1:dim(no)[1]) {
 }
 ############################# Variance of the PON at each of the 62k positions #######################################3
 v<-apply(mafsP1,2:3,sd) # variance of the counts of each position based on PON
-v0 <- min(v[v>0])/10000000 # for counts w zero variance, we replace w a very small value
+v0 <- min(v[v>0])/100000#00 # for counts w zero variance, we replace w a very small value
 v1<- v
 v1[v==0]=v0
 # PON mutations and variability ###################################################################################
@@ -172,15 +175,39 @@ pROC_obj <- roc(rocTF,c(mahaCancer, mahaControl),
                 plot=TRUE, auc.polygon=TRUE, max.auc.polygon=TRUE, grid=TRUE,
                 print.auc=TRUE, show.thres=TRUE)
 
-
 sens.ci <- ci.se(pROC_obj)
 plot(sens.ci, type="shape", col="lightblue")
 ## Warning in plot.ci.se(sens.ci, type = "shape", col = "lightblue"): Low
 ## definition shape.
 plot(sens.ci, type="bars")
-
+################################################################
+ROCit_obj <- rocit(score=c(mahaCancer, mahaControl),class=rocTF)
+plot(ROCit_obj)
+ksplot(ROCit_obj)
+###############
+precrec_obj <- evalmod(scores = c(mahaCancer, mahaControl), labels = rocTF)
+autoplot(precrec_obj)
+precrec_obj2 <- evalmod(scores = c(mahaCancer, mahaControl), labels = rocTF, mode="basic")
+autoplot(precrec_obj2)  
+#######################
 # highest Youden’s score index 9: max (sensitivity + specificity-1) = 1.6568 for .9 specificity/1-FP(10%) and .7568 sensitivity/TP(75.68%)
+sort(mahaT,decreasing = T)[1:68]
+#[1] 1.143055e-03 9.922270e-04 5.618856e-04 4.961135e-04 4.236979e-04 3.307423e-04 3.236866e-04 2.979202e-04 2.749379e-04 2.650314e-04 2.606588e-04
+#[12] 2.604915e-04 2.596182e-04 2.468367e-04 2.176489e-04 2.162913e-04 2.052583e-04 1.822990e-04 1.811689e-04 1.778197e-04 1.746562e-04 1.726651e-04
+#[23] 1.700331e-04 1.632367e-04 1.606742e-04 1.591930e-04 1.580977e-04 1.575442e-04 1.566605e-04 1.529997e-04 1.489601e-04 1.489601e-04 1.433361e-04
+#[34] 1.429947e-04 1.419545e-04 1.417240e-04 1.415791e-04 1.321530e-04 1.298091e-04 1.252298e-04 1.221734e-04 1.217086e-04 1.210090e-04 1.206197e-04
+#[45] 1.198209e-04 1.180883e-04 1.160795e-04 1.133554e-04 1.116930e-04 1.116671e-04 1.065573e-04 1.056450e-04 1.054419e-04 1.033838e-04 1.021434e-04
+#[56] 1.014164e-04 9.896396e-05 9.889234e-05 9.798165e-05 9.604065e-05 9.542160e-05 9.463632e-05 9.463632e-05 9.463632e-05 9.325567e-05 9.298205e-05
+#[67] 8.833470e-05 8.833470e-05
+sort(mahaCancer)[1:30]
+#[1] 2.039784e-05 2.511039e-05 2.782754e-05 2.843320e-05 2.871902e-05 3.929044e-05 4.701047e-05 5.759859e-05 7.149662e-05 1.057386e-04 1.187934e-04
+#[12] 1.196277e-04 1.274658e-04 1.614950e-04 1.854260e-04 1.854770e-04 2.166700e-04 2.728979e-04 2.984374e-04 3.272750e-04 3.321927e-04 3.453298e-04
+#[23] 3.588652e-04 4.054661e-04 4.082032e-04 4.092563e-04 4.339736e-04 5.271311e-04
 
+#For a threshold: .72 specificity/1-FP(28%, 189 of 675) for controls + .973 sensitivity/TP(97.3%, 36 of 37) for cancers. 
+#95% CI (2000 stratified bootstrap replicates): 
+ci.thresholds(pROC_obj)$specificity
+ci.thresholds(pROC_obj)$sensitivity
 
 dimnames(countsC00)[[1]][cancer_list[which(mahaFull==0)]]
 #[1] "/faststorage/project/PolyA/BACKUP/CRUK/plasma/N289/6678/C28A06678D_cfdna_N289-21___200630bix195220/output/C28A06678D_cfdna_N289-21_consensus.bait.pileup"
