@@ -27,10 +27,12 @@ for (i in 1:dim(no)[1]) {
   mafsP1[i,,] <- no[i,,]  /auxMP[i,]
 }
 ############################# Variance of the PON at each of the 62k positions #######################################3
-v<-apply(mafsP1,2:3,sd) # variance of the counts of each position based on PON
-v0 <- min(v[v>0])/100000#00 # for counts w zero variance, we replace w a very small value
-v1<- v
-v1[v==0]=v0
+#v<-apply(mafsP1,2:3,sd) # variance of the counts of each position based on PON
+#v0 <- min(v[v>0])/100000#00 # for counts w zero variance, we replace w a very small value
+#v1<- v
+#v1[v==0]=v0
+v1 <- apply(mafsP1,2:3,sd, na.rm = T) #Note na.rm = T
+v1[ v1 == 0 ] <- 1E-5
 # PON mutations and variability ###################################################################################
 sitemut <- t(apply(pon_obj2$coordinates, 1, function(x){
   paste( paste0(trimws(x[1]), ":", trimws(x[2]), "_"),
@@ -67,6 +69,9 @@ for (i in 1:dim(countsQ1)[1]) {
 }
 plot(erQ1)
 print(erQ1)
+########################
+prior0 <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cosmic-prior.RDS") # 
+
 # cruk plasma data ##################################################################################################
 countsC00 <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cruk-counts.RDS") # 
 countsC001 <- countsC00[,,1:4] + countsC00[,,6:9]
@@ -114,8 +119,8 @@ mahaT <- vector()
 j=1
 for (i in cancer_list){
   #i = 6
-  for (k in control_list){
-    mahaT[j] <- sum(countsW[i,,]* mafsC[k,,]/v1,  na.rm=T)/sum(countsW[i,,])#/sum(mafsC[k,,],  na.rm=T)
+  for (k in control_list[6:15]){
+    mahaT[j] <- sum(countsW[i,,]* mafsC[k,,]/v1,  na.rm=T)/sum(countsW[i,,])#*prior0*prior0*prior0 #/sum(mafsC[k,,],  na.rm=T)
     print(sum(mafsC[k,,],  na.rm=T))
     j = j + 1
   }
@@ -129,7 +134,7 @@ j=1
 for (i in cancer_list){
   #i = 6
   for (k in adenoma_list){
-    mahaT2[j] <- sum(countsW[i,,]* mafsC[k,,]/v1,  na.rm=T)/sum(countsW[i,,])#/sum(mafsC[k,,],  na.rm=T)
+    mahaT2[j] <- sum(countsW[i,,]* mafsC[k,,]/v1,  na.rm=T)/sum(countsW[i,,])#*prior0*prior0*prior0 #/sum(mafsC[k,,],  na.rm=T)
     j = j + 1
   }
   #print(mahaT2)
@@ -140,9 +145,9 @@ plot(mahaT2)
 maha <- vector()
 j=1
 for (i in cancer_list){
-  maha[j] <- sum(countsW[i,,]* mafsC[i,,]/v1,  na.rm=T) / sum(countsW[i,,])#/sum(mafsC[i,,],  na.rm=T)#45 of 95 cancers have WES, of them 37 have VAF>0
-  print(sum(countsW[i,,]))
-  print(sum(mafsC[i,,],  na.rm=T))
+  maha[j] <- sum(countsW[i,,]* mafsC[i,,]/v1,  na.rm=T) / sum(countsW[i,,])#*prior0*prior0*prior0 #/sum(mafsC[i,,],  na.rm=T)#45 of 95 cancers have WES, of them 37 have VAF>0
+  #print(sum(countsW[i,,]))
+  #print(sum(mafsC[i,,],  na.rm=T))
 # maha[i] <- sum(countsW[6,,]* mafsC[i,,]/v1,  na.rm=T) # should be VAF mafsC[i,,]) #
 if (maha[j]>0) {
 j = j + 1
@@ -153,15 +158,15 @@ j = j + 1
 } 
 print(maha)
 
-mahaCancer <- maha[1:37] # 37 of 45 , w 8 cancers w VAFs 0
+mahaCancer <- maha[1:40] # 37 of 45 , w 8 cancers w VAFs 0
 plot(mahaCancer) # Cancer samples with VAF>0
 
 mahaControl <- c(mahaT)#, mahaT2) # 1575 (45x15+45x20)
 plot(mahaT2,ylim=range(c(0,0.0035)))
 plot(mahaT,ylim=range(c(0,0.0035)))
 #ROC; find where overall success rate numbers are
-rocTF = rep(0, (37+45*15))#+45*20))
-rocTF[1:37]=1
+rocTF = rep(0, (40+45*10))#15))#+45*20))
+rocTF[1:40]=1
 
 pred <- prediction(c(mahaCancer, mahaControl), rocTF)
 perf<-performance(pred,"tpr", "fpr")
@@ -247,7 +252,7 @@ names(resCRUK) <- basename(pileupsC[1:8])
 saveRDS (resCRUK, "~/genomedk/matovanalysis/umiseq_analysis/CRUKcontrols/2020_11_06_CRUK_8CTL_SW.RDS")
 
 
-
+aux = c( 5971 , 5310  ,4817 ,11835 , 6452 , 6409 , 8478 ,17439 , 9782 , 5547 ,16303,  7537 , 8103 , 8821,  8166,  7542,  9305 , 7983,  8699,  8551,  7443 ,17254 , 4431 , 4307 ,7843 ,2978 , 5093,  7637 , 3299,  3804 , 1154 , 3349 , 8559,  7092  ,2072,   887 , 9535 , 5891,  3527 , 3747,  9516  ,2896,  1489 , 2808 , 3124)
 
 
 
