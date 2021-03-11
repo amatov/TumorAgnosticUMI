@@ -158,7 +158,7 @@ j = j + 1
 } 
 print(maha)
 
-mahaCancer <- maha[1:40] # 37 of 45 , w 8 cancers w VAFs 0
+mahaCancer <- maha[1:40] # 40 of 45 , w 5 cancers w VAFs 0
 plot(mahaCancer) # Cancer samples with VAF>0
 
 mahaControl <- c(mahaT)#, mahaT2) # 1575 (45x15+45x20)
