@@ -6,6 +6,11 @@ import csv
 
 from utils import regions
 
+import numpy as np
+
+from .bam import BAM
+from .bed import load_bed_file
+from ..data import Data
 
 class Variation:
     def __init__(self, pos, ref, alt):
