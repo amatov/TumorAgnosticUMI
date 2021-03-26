@@ -1,0 +1,20 @@
+from gwf import Workflow, AnonymousTarget
+from os.path import join
+from glob import glob
+
+output_dir = "output"
+bams = glob("bams/*.sorted.bam")
+bed_100kbp_file = "genome_bins.bed"
+for bam in bams:
+    bam_id = bam.split("/")[-1].split(".")[0]
+    output = join(output_dir, f"{bam_id}.pickle")
+    gwf.target(
+        f"100kbp_length_data_{bam_id}",
+        inputs=[bam, bed_100kbp_file],
+        outputs=[output],
+        walltime="04:00:00",
+    ) << """
+    ctDNAtool generate-length {} {} -o {} --max-length 500
+    """.format(
+        bam, bed_100kbp_file, output
+    )
