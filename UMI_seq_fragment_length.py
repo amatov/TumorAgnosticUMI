@@ -8,26 +8,19 @@ from utils import regions
 
 import numpy as np
 
-from .bam import BAM
-from .bed import load_bed_file
-from ..data import Data
-
 class Variation:
     def __init__(self, pos, ref, alt):
         self.pos = pos
         self.ref = ref
         self.alt = alt
 
-
 def str_set_join(s1, s2):
     return "".join(set(s1 + s2))
 
-
-class MutationFinder:
+class FragmentFinder:
     def __init__(
         self,
-        bam_file,
-        output,
+        bam_file
     ):
         # Check if index exists, if not create an index file
         bai_filename = f"{bam_file}.bai"
@@ -36,30 +29,9 @@ class MutationFinder:
             pysam.index(bam_file)
 
         # Open files for reading and writing
-        self._output_fp = open(output, "w")
-        self.writer = csv.writer(self._output_fp, delimiter="\t")
         self.bam_file = pysam.AlignmentFile(bam_file, "rb")
 
-    def __del__(self):
-        self._output_fp.close()
-
-    def write_finding(self, chrom, pos, ref, alt, length):
-        context = self.tb.sequence(
-            chrom, pos - self.context_flank, pos + self.context_flank + 1
-        )
-        assert len(context) == 2 * self.context_flank + 1
-        self.writer.writerow(
-            [
-                chrom,
-                str(pos),
-                ref,
-                alt,
-                str(length),
-                context,
-            ]
-        )
-
-    def find_mutations(self, chrom, start, stop, mapq=20):
+    def find_fragments(self, chrom, start, stop, mapq=20):
 
         for pileupcolumn in self.bam_file.pileup(
             contig=chrom,
@@ -127,61 +99,41 @@ class MutationFinder:
 
                     yield ref_pos, read_allel, length
 
-def main(bam_file, bit_file, bed_file, vcf_file, output_file, is_hg38):
-    tmp_file = "{}.tmp".format(output_file)
-    finder = MutationFinder(
-        bam_file, bit_file, vcf_file, tmp_file, long_vcf_chrom_format=is_hg38
-    )
-    for chrom, start, stop in regions(bed_file):
-        finder.find_mutations(chrom, start, stop)
-    os.rename(tmp_file, output_file)
+def regions(bed_file):
+    with open(bed_file) as fd:
+        reader = csv.reader(fd, delimiter = "\t")
 
+        for line in reader:
+            yield line[0], line[1], line[2] # yields: chromosome, start position, end positionm
+
+nucleosome_index_map = {"A":0, "T":1, "G":2, "C":3}
+
+def main(bam_file, bed_file, output_file,max_length=700):
+    finder = FragmentFinder(bam_file)
+
+    region_lst = regions(bed_file)
+
+    tensor = np.zeros((len(region_lst), 4, max_length-1), dtype=np.uint16)
+
+    for index,region in enumerate(region_lst):
+        chrom, start, stop = region
+        for ref_pos,read_allel,length in finder.find_fragments(chrom, start, stop):
+            if 1<=length<=max_length:
+                nucle = nucleosome_index_map.get(read_allel)
+                tensor[index,nucle,length]+=1
+
+    with open(output_file, "w") as fd:
+        writer = csv.writer(fd, delimiter = "\t")
+        print(tensor)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("bam_file", help="bam file")
-    parser.add_argument("bit_file")
     parser.add_argument("bed_file")
-    parser.add_argument("vcf_file")
     parser.add_argument("output_file")
-    parser.add_argument("hg_version", choices=["hg19", "hg38"])
     args = parser.parse_args()
-    is_hg38 = args.hg_version == "hg38"
     main(
         args.bam_file,
-        args.bit_file,
         args.bed_file,
-        args.vcf_file,
         args.output_file,
-        is_hg38,
     )
-
-def length_matrix(bam_file, bed_file, output_file, max_length=500):
-    """Creates a matrix where each row represents a region from the bed file
-    and the columns are read lengths from 0 to max_length.
-    The size of the matrix is (n x max_length) where n is the number of regions
-    in the bed file.
-    Data is read length counts, so that a_ij is the number of reads in region i,
-    with length j.
-
-    :param bam_file: File path to the bam sample file
-    :type bam_file: str
-    :param bed_file: File path to the bed file, which can be compiled by the preprocessing function
-    :type bed_file: str
-    :param output_file: File path to the output file
-    :type output_file: str
-    :param max_length: Maximum read length to be counted
-    :type max_length: int > 0
-    :returns:  None
-    """
-    region_lst = load_bed_file(bed_file)
-    matrix = np.zeros((len(region_lst), max_length), dtype=np.uint16)
-    bam = BAM(bam_file)
-    id_lst = list()
-    for i, region in enumerate(region_lst):
-        for read in bam.pair_generator(region.chrom, region.start, region.end):
-            length = abs(read.end - read.start)
-            if length < max_length:
-                matrix[i, length] += 1
-        id_lst.append(region.region_id)
-    Data.write(Data(matrix, id_lst), output_file)
