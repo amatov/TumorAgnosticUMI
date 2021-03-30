@@ -1,11 +1,7 @@
 import argparse
 import pysam
-import py2bit
 import os
 import csv
-
-from utils import regions
-
 import numpy as np
 
 class Variation:
@@ -104,14 +100,14 @@ def regions(bed_file):
         reader = csv.reader(fd, delimiter = "\t")
 
         for line in reader:
-            yield line[0], line[1], line[2] # yields: chromosome, start position, end positionm
+            yield line[0], int(line[1]), int(line[2]) # yields: chromosome, start position, end positionm
 
 nucleosome_index_map = {"A":0, "T":1, "G":2, "C":3}
 
 def main(bam_file, bed_file, output_file,max_length=700):
     finder = FragmentFinder(bam_file)
 
-    region_lst = regions(bed_file)
+    region_lst = list(regions(bed_file))
 
     tensor = np.zeros((len(region_lst), 4, max_length-1), dtype=np.uint16)
 
