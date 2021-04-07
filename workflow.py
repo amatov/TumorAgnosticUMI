@@ -3,7 +3,7 @@ from os.path import join
 from glob import glob
 gwf = Workflow()
 
-output_dir = ""
+output_dir = "/genomedk/matov/umiseq_analysis/CRUK5Mb/"
 bams = glob("*.sorted.bam")
 bed_file = "NEW_METHOD_hg38_08feb2016_capture_targets.bed"
 for bam in bams:
