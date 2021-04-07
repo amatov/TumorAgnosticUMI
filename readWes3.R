@@ -7,6 +7,35 @@ library("ROCit")
 # add new flags; number of fragments, age, gender, concentration, 10 flags
 library(GenomicRanges)
 source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/tools.R")
+#################################################
+W3_N289_70 <- read.table("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb/N289-70.txt", header = T)  
+w3 <- W3_N289_70[,3:702]
+
+mean(unlist(w3))# 1.530753
+
+w3t <- unlist(w3[219,])
+w3t1 <- unlist(w3t[w3t>0])
+length(w3t1) #232
+muPos <- sum(w3t) / length(w3t1) # 332.431
+
+muPos <- vector()
+w3pos <- vector()
+for (i in 1:239){
+  #i=219 # 219, 220, 221, 222
+  w3t <- unlist(w3[i,])
+  w3t1 <- w3t[w3t>0]
+  length(w3t1) 
+  auxPos <- (meanS - w3t1)*(meanS - w3t1)
+  w3pos[i] <- mean(auxPos)
+  muPos[i] <- sum(w3t) / length(w3t1) # 332.431
+}
+meanS <- mean(muPos)
+meanS # 7.065037
+
+# w3 per position
+w3pos <- mean (meanS - frli) * (meanS - frli)
+
+
 # 45 Subjects of the Control Panel of Normal PON ####################################################################
 pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
 pon_counts <- pon_obj2[["pon"]]
@@ -158,7 +187,7 @@ j = j + 1
 } 
 print(maha)
 
-mahaCancer <- maha[1:40] # 40 of 45 , w 5 cancers w VAFs 0
+mahaCancer <- maha[1:40] # 37 of 45 , w 8 cancers w VAFs 0
 plot(mahaCancer) # Cancer samples with VAF>0
 
 mahaControl <- c(mahaT)#, mahaT2) # 1575 (45x15+45x20)
