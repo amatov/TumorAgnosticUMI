@@ -114,6 +114,8 @@ def regions(bed_file):
         reader = csv.reader(fd, delimiter = "\t")
 
         for line in reader:
+            #yield line[0], int(line[1]), int(line[2]) # yields: chromosome, start position, end positionm
+            #pos <- int(line[2] - int(line[1]) + 1
             yield line[0], int(line[1]), int(line[2]) # yields: chromosome, start position, end positionm
 
 nucleosome_index_map = {"A":0, "T":1, "G":2, "C":3}
