@@ -61,7 +61,7 @@ auxMP <- rowSums(no, dims = 2)
 for (i in 1:dim(no)[1]) {
   mafsP1[i,,] <- no[i,,]  /auxMP[i,]
 }
-############################# Standard Variation of the PON at each of the 62k positions #######################################3
+############################# Standard Variation of the VAFs of PON at each of the 62k positions #######################################3
 #v<-apply(mafsP1,2:3,sd) # variance of the counts of each position based on PON
 #v0 <- min(v[v>0])/100000#00 # for counts w zero variance, we replace w a very small value
 #v1<- v
