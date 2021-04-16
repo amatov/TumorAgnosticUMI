@@ -20,6 +20,8 @@ muPos <- sum(w3t) / length(w3t1) # 332.431
 
 muPos <- vector()
 w3pos <- vector()
+w3pos2 <- vector()
+
 for (i in 1:239){
   #i=219 # 219, 220, 221, 222
   w3t <- unlist(w3[i,])
@@ -28,12 +30,16 @@ for (i in 1:239){
   auxPos <- (meanS - w3t1)*(meanS - w3t1)
   w3pos[i] <- mean(auxPos)
   muPos[i] <- sum(w3t) / length(w3t1) # 332.431
+  auxPos2 <- (muPos[i] - w3t1)*(muPos[i] - w3t1)
+  
+  w3pos2[i] <- mean(auxPos2)
+  
 }
 meanS <- mean(muPos)
 meanS # 7.065037
 
 # w3 per position
-w3pos <- mean (meanS - frli) * (meanS - frli)
+#w3pos <- mean (meanS - frli) * (meanS - frli)
 
 
 # 45 Subjects of the Control Panel of Normal PON ####################################################################
@@ -55,7 +61,7 @@ auxMP <- rowSums(no, dims = 2)
 for (i in 1:dim(no)[1]) {
   mafsP1[i,,] <- no[i,,]  /auxMP[i,]
 }
-############################# Variance of the PON at each of the 62k positions #######################################3
+############################# Standard Variation of the PON at each of the 62k positions #######################################3
 #v<-apply(mafsP1,2:3,sd) # variance of the counts of each position based on PON
 #v0 <- min(v[v>0])/100000#00 # for counts w zero variance, we replace w a very small value
 #v1<- v
