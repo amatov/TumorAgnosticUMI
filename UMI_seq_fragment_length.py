@@ -116,7 +116,12 @@ def regions(bed_file):
         for line in reader:
             #yield line[0], int(line[1]), int(line[2]) # yields: chromosome, start position, end positionm
             #pos <- int(line[2] - int(line[1]) + 1
-            yield line[0], int(line[1]), int(line[2]) # yields: chromosome, start position, end positionm
+            chromosome,start,end = line[0], int(line[1]), int(line[2]) # yields: chromosome, start position, end positionm
+            #print(chromosome)
+
+            for position in range(start,end+1):
+                yield chromosome,position,position+1
+
 
 nucleosome_index_map = {"A":0, "T":1, "G":2, "C":3}
 index_nucleaosome_map = {0:"A", 1:"T", 2:"G", 3:"C"}
