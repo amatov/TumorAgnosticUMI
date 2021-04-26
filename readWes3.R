@@ -9,7 +9,13 @@ library(GenomicRanges)
 source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/tools.R")
 #################################################
 W3_N289_70 <- read.table("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb/N289-70.txt", header = T)  
+W3_N289_85 <- read.table("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb/C44A06969D_cfdna_N289_85_consensus.txt", header = T)  
+W3_N289_58 <- read.table("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb/C47A07007D_cfdna_N289_58_consensus.txt", header = T)  
+w3 <- W3_N289_58[,3:702]
+
 w3 <- W3_N289_70[,3:702]
+W3_N289_85
+w3 <- W3_N289_85[,3:702]
 
 mean(unlist(w3))# 1.530753
 
