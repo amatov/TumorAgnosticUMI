@@ -8,15 +8,18 @@ gwf = Workflow(
             'memory': '16g',
             'walltime': '01:00:00'})
 
-bam_files=glob('~/genomedk/matov/umiseq_analysis/CRUK5Mb/*/*consensus.sort.bam')
+#bam_files=glob('~/genomedk/matov/umiseq_analysis/CRUK5Mb/*/*consensus.sort.bam')
+bam_files=glob('*consensus.sort.bam')
+#realpath C70A06997D_cfdna_N289-54_consensus.sort.bam
+#/home/matov/matovanalysis/umiseq_analysis/CRUK5Mb/C70A06997D_cfdna_N289-54_consensus.sort.bam
 
 print(bam_files)
 
-output_dir = "/genomedk/matov/umiseq_analysis/CRUK5Mb/"
+output_dir = "."
 
 bed_file = "NEW_METHOD_hg38_08feb2016_capture_targets.bed"
 for bam in bam_files:
-    bam_id = bam.split("/")[-1].split(".")[0]
+    bam_id = bam.split("/")[-1].split(".")[0].replace("-","_")
     output = join(output_dir, f"{bam_id}.txt")
     gwf.target(
         f"UMI_seq_fragment_length_data_{bam_id}",
@@ -24,7 +27,7 @@ for bam in bam_files:
         outputs=[output],
         walltime="04:00:00",
     ) << """
-    python ~/genomedk/matov/umiseq_analysis/CRUK5Mb/UMI_seq_fragment_length.py {} {} {}
+    python UMI_seq_fragment_length.py {} {} {}
     """.format(
         bam, bed_file, output
     )
