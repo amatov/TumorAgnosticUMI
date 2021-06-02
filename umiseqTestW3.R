@@ -175,26 +175,4 @@ precrec_obj2 <- evalmod(scores = c(mahaCancer, mahaControl), labels = rocTF, mod
 autoplot(precrec_obj2)  
 
 
-############## RDS 95 cancer, 20 adenoma, 15 control #####################################################
-sitemutPON # mutation map 15k x 4 for each position of the core panel
-length(plasma$sitemut_hg38) # 294 WES mutations
-#plasma$i <- sapply(as.character(plasma$sitemut_hg38), function(s) which(sitemutPON %in% s))
-
-# loop over 95 cancers (mafsC1)95,15k,4 
-cancer_SNPs$sample_label # list of samples with WES data
-cancer_SNPs$sitemut_hg38 # list of WES mutations
-cancerSamples <- unique(cancer_SNPs$sample_label)
-
-dimnames(countsC00)[[1]] #The pileup names are the first dim
-indexInRDS <- sapply(cancerSamples, function(x) grep(x, pileupsWES))  
-indexInRDS[2] #C22A06329D  6 
-cancerSamples[1] # "C22A06329D" There are 45 cancer CRUK samples with WES
-
-scores <- array(0,dim=c(dim(mafsC1)[1],dim(mafsC1)[1]))
-# test for cancer1 the score for its 3 mutations compared to all 95 cancers at the same mutations
-
-plasma$ind <- sapply(as.character(sitemutPON), function(s) which(cancer_SNPs$sitemut_hg38 %in% s)) # INDEX IN COUNTS MATRIX OF MUTATIONS
-plasma$i <- sapply(as.character(plasma$sitemut_hg38), function(s) which(sitemut %in% s))
-
-
 
