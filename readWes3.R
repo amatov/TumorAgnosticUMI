@@ -8,30 +8,37 @@ library("ROCit")
 library(GenomicRanges)
 source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/tools.R")
 #################################################
+w3_files <- list.files("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb", recursive = T, full.names = T, pattern = "_consensus.txt")
 W3_N289_70 <- read.table("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb/N289-70.txt", header = T)  
-W3_N289_85 <- read.table("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb/C44A06969D_cfdna_N289_85_consensus.txt", header = T)  
-W3_N289_58 <- read.table("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb/C47A07007D_cfdna_N289_58_consensus.txt", header = T)  
-w3 <- W3_N289_58[,3:702]
+W3_N289_85 <- read.table("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb/C44A06969D_cfdna_N289_85_consensus.txt")#, header = T)  
+W3_N289_58 <- read.table("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb/C47A07007D_cfdna_N289_58_consensus.txt")#, header = T)  
+w3 <- W3_N289_58[,3:702] #mean(unlist(w3)) 0.007291663
 
 w3 <- W3_N289_70[,3:702]
 W3_N289_85
 w3 <- W3_N289_85[,3:702]
 
-mean(unlist(w3))# 1.530753
+mean(unlist(w3))# 0.007291663
+w31<-unlist(w3)
+w32<-w31[which(w31> 0)]
+muPos <- sum(w31) / length(w32) # 332.431
 
-w3t <- unlist(w3[219,])
-w3t1 <- unlist(w3t[w3t>0])
+#w3t <- unlist(w3[219,])
+#w3t1 <- unlist(w3t[w3t>0])
 length(w3t1) #232
 muPos <- sum(w3t) / length(w3t1) # 332.431
+meanS <- mean(muPos)
+meanS # 7.065037
 
 muPos <- vector()
 w3pos <- vector()
 w3pos2 <- vector()
 
-for (i in 1:239){
+for (i in 1:length(w32)){
   #i=219 # 219, 220, 221, 222
   w3t <- unlist(w3[i,])
-  w3t1 <- w3t[w3t>0]
+  w3t1 <- w3t[which(w3t>0)]
+
   length(w3t1) 
   auxPos <- (meanS - w3t1)*(meanS - w3t1)
   w3pos[i] <- mean(auxPos)
@@ -41,8 +48,7 @@ for (i in 1:239){
   w3pos2[i] <- mean(auxPos2)
   
 }
-meanS <- mean(muPos)
-meanS # 7.065037
+
 
 # w3 per position
 #w3pos <- mean (meanS - frli) * (meanS - frli)
