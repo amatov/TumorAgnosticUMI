@@ -1650,7 +1650,41 @@ for (i in 1:499 ) {
   umi_aux <- umi[,i]
   PON45[,,i] <- matrix(umi_aux, ncol = 595, byrow = 45) # PON
 }
+hgA <- hist(CRUK68[,209,],breaks = 4800 , plot = FALSE) # Save first histogram data
+hgB <- hist(PON45[,209,] ,breaks = 1200, plot = FALSE) # Save 2nd histogram data
+plot(hgA, col = rgb(1,0,0,1/10),xlim = c(0,60), ylim = c(0,4000)) # Plot 1st histogram using a transparent color
+plot(hgB, col = rgb(0,1,0,1/10), add = TRUE,xlim = c(0,60), ylim = c(0,4000)) # Add 2nd histogram using different color
 
+hgA <- hist(CRUK68[,220,],breaks = 4800 , plot = FALSE) # Save first histogram data
+hgB <- hist(PON45[,220,] ,breaks = 2400, plot = FALSE) # Save 2nd histogram data
+plot(hgA, col = rgb(1,0,0,1/10),xlim = c(0,60), ylim = c(0,6000)) # Plot 1st histogram using a transparent color
+plot(hgB, col = rgb(0,1,0,1/10), add = TRUE,xlim = c(0,60), ylim = c(0,6000)) # Add 2nd histogram using different color
+
+hgA <- hist(CRUK68[,137,],breaks = 24 , plot = FALSE) # Save first histogram data
+hgB <- hist(PON45[,137,] ,breaks = 24, plot = FALSE) # Save 2nd histogram data
+plot(hgA, col = rgb(1,0,0,1/10),xlim = c(0,5), ylim = c(0,33000)) # Plot 1st histogram using a transparent color
+plot(hgB, col = rgb(0,1,0,1/10), add = TRUE,xlim = c(0,5), ylim = c(0,33000)) # Add 2nd histogram using different color
+
+umiseqG_pon45 = array(0, dim=c(45*499,595))
+umiseqG_CRpre68 = array(0, dim=c(68*499,595))
+for (i in 1:595 ) {
+  print(i)
+  umiseqG_CRpre68 [,i] <- CRUK68[,i,]  
+  umiseqG_pon45 [,i] <- PON45[,i,] 
+}
+write.csv(umiseqG_pon45,'~/genomedk/matovanalysis/DELFI_analysis/python/umiseqG_pon45.csv') #dim(umiseqG_pon45) 22455   595
+write.csv(umiseqG_CRpre68,'~/genomedk/matovanalysis/DELFI_analysis/python/umiseqG_CRpre68.csv') #dim(umiseqG_CRpre68) 33932   595
+
+k_umiG_CRpre68 <- read.csv('~/genomedk/matovanalysis/DELFI_analysis/python/KLdivergenceUMIseqG_CRpre68_Pon45.csv')
+kumiG_CRpre68  <- k_umiG_CRpre68[2:596,2]
+plot(kumiG_CRpre68)
+
+write.csv(PON45[,137,],'~/genomedk/matovanalysis/DELFI_analysis/python/umiseqGbin137_pon45.csv') #dim(PON45[,137,]) 45 499
+write.csv(CRUK68[,137,],'~/genomedk/matovanalysis/DELFI_analysis/python/umiseqGbin137_CRpre68.csv') #dim(CRUK68[,137,])  68 499
+
+k_umiGbin137_CRpre68 <- read.csv('~/genomedk/matovanalysis/DELFI_analysis/python/KLdivergenceUMIseqGbin137_CRpre68_Pon45.csv')
+kumiGbin137_CRpre68  <- k_umiGbin137_CRpre68[2:499,2]
+plot(kumiGbin137_CRpre68)
 #####################
 umi361 <- umi[,361]
 hv361 <- matrix(umi361, ncol = 595, byrow = 45) #
