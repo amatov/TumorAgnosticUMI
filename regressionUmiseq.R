@@ -1,4 +1,5 @@
 library("glmnet")
+library(readxl)
 source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/R/read_bed.R") #1/0 list
 ############################# 
 # 45 Subjects of the Control Panel of Normal PON ####################################################################
@@ -23,6 +24,24 @@ v<-apply(mafsP1,2:3,var) # variance of the VAFs of each position based on PON
 v0 <- min(v[v>0])/10000000 # for counts w zero variance, we replace w a very small value
 v1<- v
 v1[v==0]=v0
+#####representative PON##############
+vm<-apply(mafsP1,2:3,mean) 
+#########list of cancer samples################
+cruk <- read_excel("~/genomedk/matovanalysis/umiseq_analysis/2021-01-04_CRUK_sample_status.xlsx", sheet = 1) 
+cruk_cancer1 <- which(cruk$sample_type=="CRC pre-OP" )#& cruk$excluded=="excluded")  
+cruk_cancer2 <- which(cruk$sample_type=="CRC high ctDNA")# & cruk$excluded=="excluded")  
+cc1 <- cruk$`NGS-ID`[cruk_cancer1]
+cc2 <- cruk$`NGS-ID`[cruk_cancer2]
+#########list of CRUK files##########################
+pileupsC <- list.files("~/genomedk/PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "bait.pileup")
+pileupsC[cc1]
+intersect(pileupsC,cc1)
+d2 <-  lapply(pileupsC, function(x) sapply(strsplit(x, cc1), "[", 1))
+
+pileupsD2 <- list.files("~/genomedk/DELFI2/Workspaces/per_and_elias/delfi2_length_5Mbp", recursive = T, full.names = T, pattern = "tsv")
+bam_files <- list.files("~/PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "consensus.sort.bam")
+
+
 #######################################################################################################################################
 countsC00 <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cruk-counts.RDS") # 
 countsC0= array(0, dim=c(95,dim(countsC00)[2],dim(countsC00)[3]))
