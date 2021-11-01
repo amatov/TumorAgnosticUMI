@@ -135,6 +135,7 @@ for (i in cancer_list){
 if (maha[j]>0) {
 j = j + 1
   }
+}
 
 mahaCancer <- maha[1:40] # 37 of 45 , w 8 cancers w VAFs 0
 plot(mahaCancer) # Cancer samples with VAF>0
