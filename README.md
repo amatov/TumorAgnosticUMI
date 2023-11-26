@@ -1,4 +1,4 @@
-### UMI-seq: Ultra-deep targeted sequencing of a narrow colorectal cancer-relevant subset of the genome to a unique coverage of 5.000-30.000x
+### A Tumor-Agnostic Approach for Detection of Colorectal Neoplasm in Ultra-Deep Targeted Sequencing of a Narrow Subset of the Genome
 
 #### Presentations and clinical applications on this project are available here: https://researchgate.net/publication/374059825_A_Tumor-Agnostic_Approach_for_Detection_of_Colorectal_Neoplasm_in_Ultra-Deep_Targeted_Sequencing_of_a_Narrow_Subset_of_the_Genome_2020_-_2021
 
