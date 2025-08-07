@@ -1,6 +1,4 @@
-### A Tumor-Agnostic Approach for Detection of Colorectal Neoplasm in Ultra-Deep Targeted Sequencing of a Narrow Subset of the Genome
-
-### Presentations and clinical applications on this project are available here: http://dx.doi.org/10.13140/RG.2.2.11549.69605 (5 PDF files)
+#### A Tumor-Agnostic Approach for Detection of Colorectal Neoplasm in Ultra-Deep Targeted Sequencing of a Narrow Subset of the Genome
 
 #### I developed a tumor-agnostic approach for the detection of colorectal neoplasm based on the DNA fragment length distribution on- and off-panel. Tumors exhibit clonal architecture with multiple mutations present in a subset of the tumor cell population. Sub-clonal mutations provide key insights into tumor evolution and sub-clonal variants can be detected using the deep coverage (over 10,000x) of next-generation sequencing (NGS) data, but their distinction from sequencing errors, library preparation and alignment artifacts depend on the noise level. 
 
@@ -18,6 +16,6 @@
 
 #### Aggregating evidence from multiple mutations (non-tumor informed mutation score): For classification purposes, I proposed to compute a score for each patient sample based on aggregating evidence from multiple mutations present in the plasma. I assign different weights for each mutation based on a metric (Matov et al. 2011), such as the Mahalanobis distance, which accounts for the heterogeneity of each mutation in samples from healthy individuals. In addition, I assign another weighting factor based on the likelihood to have a mutation at the concrete position with the gene and the probability the gene to be mutated based on CRC statistics and added a weight for short/long vs middle-length reads to further distinguish reads originating from tumor cells. I formulate the score as a function of multiple mutations, between five and eight, which collectively determine the presence of colorectal neoplasm. Each mutation is presented as its MAF weighted by the dispersion of the read counts for the same position in a cohort of normal samples. For positions with zero variance across the panel of normal (PON) samples, the zero is replaced with a very small value calculated, as the minimal value of the variance matrix divided by 1e+07. Additionally, I utilize a second weight term based on the probability of each of the mutated genes to carry a mutation in that position. For the analysis of patient samples, I compare the Poisson distributions of the score values for a cohort of healthy individuals (normal) and CRC patients to determine a cut-off threshold score value. Further, I add weights based on the DNA fragment length distribution for particular on-panel and off-panel genomic positions.
 
-### The UMI-seq cohorts consisted of samples from clinical trials NCT03637686, NCT03748680, NCT04084249
+### For detailed information, see: https://www.researchgate.net/publication/382900905_Colorectal_Cancer_DNA_Fragmentation_Patterns_as_Image_Datasets
 
 
