@@ -4,6 +4,7 @@ library(abind)
 #setwd ('~/genomedk/projects/test/KLD_W4')
 #Read output from ctDNAtool (Elias) - its my personal folder.
 #raw <- read.table("~/genomedk/projects/test/fraglen/out.tsv", sep = "\t", header = F)
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 PON <- list.files("~/genomedk/projects/test/pon38", recursive = T, full.names = T, pattern = "txt")
 PONname <- gsub(".+/(Donor.+)_consensus.+", "\\1", PON)
 
@@ -25,8 +26,10 @@ for (i in 1:1){
   #write.csv(res,paste0('~/genomedk/projects/test/pon38/',PONname[i],'.csv'))
 }
 #######################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 PON <- list.files("~/genomedk/projects/test/pon38", recursive = T, full.names = T, pattern = "txt")
 raw1 <- read.table(PON[1], header = F, stringsAsFactors = F)  
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 write.table(A,"/home/matov/projects/test/meanPON38.csv",sep="\t",row.names=TRUE)
 
 meanPON <- read.csv(file = '~/genomedk/projects/test/meanPON38a.csv')
@@ -97,6 +100,7 @@ PON_t <- PON_test[,3:701]
 PON_test <- read.csv('~/genomedk/projects/test/pon38/PON_merged45.csv')
 dim(PON_test)
 ##########################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 QIA <- list.files("~/genomedk/projects/test/qiagen", recursive = T, full.names = T, pattern = "txt")
 
 for (i in 1:(length(QIA))){
@@ -113,6 +117,7 @@ QIA_t <- QIA_test[,4:702]
 write.csv(QIA_t,paste0('~/genomedk/projects/test/KLD_w4/QIAtest.csv'))
 dim(QIA_test)
 ###########################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 CRUK <- list.files("~/genomedk/projects/test/fraglen", recursive = T, full.names = T, pattern = "txt")
 CRUKname <- gsub(".+/(.+)_consensus.+", "\\1", CRUK)
 

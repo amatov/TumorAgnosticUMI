@@ -1,8 +1,10 @@
 library("dplyr")
 # PON mutations and variability ###################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
 sitemut <- t(apply(pon_obj2$coordinates, 1, function(x){
   paste( paste0(trimws(x[1]), ":", trimws(x[2]), "_"),
+         # EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
          paste(x[3] ,c("A", "T", "C", "G"), sep = "/"),
          sep = "")}))
 cou <- pon_obj2[["pon"]]
@@ -12,15 +14,20 @@ v0 <- min(vo[vo>0])/10000000 # for counts w zero variance, we replace w a very s
 vo1<- vo
 vo1[vo==0]=v0
 # COSMIC prior ##########################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 prior1 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/180903_prior.RDS")
 prior11 <- prior1[,1:4]
 # IMPROVE plasma data ##################################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsIw <- list.files("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/N227", recursive = T, full.names = T, pattern = "bait.pileup")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/duplex_tools.R")
 # IMPROVE WES data ###################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 wes <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/201123_wes-spora-mutations-improve.csv", header = TRUE) # HG38
 pts <- unique(wes$pt_id)
 # IMPROVE clinical data ###################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 ItW <- read.table("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/data/IMPROVEptList",header = TRUE)
 ItW$index <- sapply(as.character(ItW$library_id), function(x) grep(x, pileupsIw))  
 #################################################################

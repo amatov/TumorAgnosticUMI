@@ -2,21 +2,30 @@
 # Explorative ----
 library(dplyr)
 #source("~/genomedk/projects/umiseq/development/tools.R") #The very latest tools
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/tools.R")
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 setwd("~/projects/pileup/specs/analyses/tumorinformed")
 
 # Include cohorts and info, calculate counts, mafs
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 qia <- readRDS("~/projects/pileup/specs/data/qiagen-counts.RDS")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 imp <- readRDS("~/projects/pileup/specs/data/improve-counts.RDS")
 #pon <- readRDS("~/genomedk/IMPROVE/call/references/201217_hg38-novaseq-xgen-sporacrc-pon.RDS")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 cruk <- readRDS("~/projects/pileup/specs/data/cruk-counts.RDS")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 info <- read.table("~/projects/pileup/specs/data/cruk-plasma-info.lst",
                    header = T, stringsAsFactors = F)
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 stage <- read.table("~/projects/pileup/specs/data/plasma-stage-time.lst", header = T, stringsAsFactors = F)
 
 #Excluded
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 flag <- readRDS(file ="~/projects/pileup/specs/analyses/noise/2021-01-05_flagged-positions.RDS")
 xx <- union_all(flag$xi, flag$xr, flag$xb) #IDSNP, REF, BALCKLIST (no need for DEL falg$xd)
 
@@ -78,6 +87,7 @@ sum(qia_score[1,,][-xx] > 0.1)
 hist(log10(imp_score[10,,][-xx] + 1E-4 ), xlim = c(-4, 4))
 
 #Make image hitmaps of multiple samples
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/projects/utility_functions/image_plot.R")
 #Cut scores into the intevals
 cuts <- c(-Inf, 1E-4, 1E-2, 1, 5, 11, 16, 50, +Inf) #Good for pon mafs based dispersion
@@ -130,6 +140,7 @@ info$i <- sapply(info$pileup, grep, dimnames(cruk)[[1]])
 sitemut_panel <-
   t(apply(pon$coordinates, 1, function(x){
     paste( paste0(trimws(x[1]), ":", trimws(x[2]), "_",
+                  # EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
                   trimws(x[3]), "/", dimnames(counts)[[3]]))}))
 dim(sitemut_panel) #[1] 18094     4
 
@@ -326,6 +337,7 @@ for(s in names(score_res)) {
 # post <- abind::abind(post, along = 0)
 # saveRDS(post, "cruk-AND.RDS")
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 post <- readRDS("~/projects/pileup/specs/data/cruk-AND.RDS")
 
 
@@ -393,6 +405,7 @@ res <-
                 score_fishpost = -2*sum(log(sw)))
 dev.off()
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/projects/utility_functions/recoder.R")
 pdata <- 
   dplyr::select(res, library_id, starts_with("score") ) %>%
@@ -414,6 +427,7 @@ f1 <- function(v, data, n, N, fun) {
   (sum(boots > v)+1) / (N + 1) #Fraction of boots with greater teststat/score
 }
 #For bootstrapping we need to exclude all flagged (not dels not considered)
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 flag <- readRDS(file ="~/projects/pileup/specs/analyses/noise/2021-01-05_flagged-positions.RDS")
 xx <- dplyr::union_all(flag$xi, flag$xr, flag$xb)
 
@@ -448,14 +462,21 @@ p <- sprintf("%.3f",(sum(score_res[[s]]$boot > score_res[[s]]$sample)/1000))
 # 1) SW_best 2) SW_comb 3) mahal based on cruk
 
 library(dplyr)
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/projects/umiseq/development/tools.R") #The very latest tools
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/projects/utility_functions/auc.R") #use auc_mw()
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/projects/utility_functions/recoder.R")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 setwd("~/projects/pileup/specs/analyses/tumorinformed")
 
 # Include cohorts and info, calculate counts, mafs
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 cruk <- readRDS("~/projects/pileup/specs/data/cruk-counts.RDS")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon <- readRDS("~/genomedk/IMPROVE/call/references/201217_hg38-novaseq-xgen-sporacrc-pon.RDS")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 info <- read.table("~/projects/pileup/specs/data/cruk-plasma-info.lst", header = T, stringsAsFactors = F)
 
 table(info$sample_type)
@@ -465,6 +486,7 @@ info %>%
 
 
 #Excluded
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 flag <- readRDS(file ="~/projects/pileup/specs/analyses/noise/2021-01-05_flagged-positions.RDS")
 xx <- union(flag$xi, union(flag$xr, flag$xb)) #IDSNP, REF, BALCKLIST (no need for DEL flag$xd)
 
@@ -486,12 +508,14 @@ mahal <- function(maf, ...)Reduce(`*`, list(maf, ...))
 score <- abind::abind( lapply(1:dim(mafs)[[1]], function(s)mahal(mafs[s,,], 1/stdev)), along = 0) #W stdev
 
 #AND posteriors 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 post <- readRDS("~/projects/pileup/specs/data/cruk-AND.RDS")
 
 #Sitemut panel in the "chr:pos_ref/alt" format
 sitemut_panel <-
   t(apply(pon$coordinates, 1, function(x){
     paste( paste0(trimws(x[1]), ":", trimws(x[2]), "_",
+                  # EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
                   trimws(x[3]), "/", dimnames(counts)[[3]]))}))
 dim(sitemut_panel) #[1] 18094     4
 

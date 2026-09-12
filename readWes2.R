@@ -1,6 +1,8 @@
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 countsW <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cruki.RDS") # # REPLACE WITH YOUR COPY
 
 # 45 Subjects of the Control Panel of Normal PON ####################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
 pon_counts <- pon_obj2[["pon"]]
 no0 = array(0, dim=c(dim(pon_counts)[1]-1,dim(pon_counts)[2],dim(pon_counts)[3]))
@@ -20,10 +22,12 @@ v1[v==0]=v0
 # PON mutations and variability ###################################################################################
 sitemut <- t(apply(pon_obj2$coordinates, 1, function(x){
   paste( paste0(trimws(x[1]), ":", trimws(x[2]), "_"),
+         # EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
          paste(x[3] ,c("A", "T", "C", "G"), sep = "/"),
          sep = "")}))
 
 # cruk plasma data ##################################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 countsC00 <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cruk-counts.RDS") # REPLACE WITH YOUR COPY
 countsC001 <- countsC00[,,1:4] + countsC00[,,6:9]
 mafsC = array(0, dim=c(dim(countsC001)[1],dim(countsC001)[2],dim(countsC001)[3]))

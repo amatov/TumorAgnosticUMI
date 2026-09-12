@@ -6,15 +6,22 @@ setwd ('~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis'
 source("sw_input_files/duplex_tools.R")
 
 library(ROCR)
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("U:\\Documents/R/utility_functions-master/recoder.R")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("U:\\Documents/R/utility_functions-master/auc.R")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("U:\\Documents/R/utility_functions-master/scaler.R")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("U:\\Documents/R/utility_functions-master/confusion_plot.R")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("G:\\PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_piles.R")
 source("sw_input_files/duplex_tools.R")
 library("dplyr")
 library("tidyr")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R") #1/0 list
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/matovanalysis/umiseq_analysis/R/mutationScore.R") #1/0 list
 p2 <- data.frame(prior)#PON
 p1 <- p2 [list == 1, ] 
@@ -27,6 +34,7 @@ prior <- prior1[,1:4]
 # data frame to take list positions only
 # source the updated R file mutationScore.R
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon_hg19 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/call/references/200419_novaseq-xgen-sporacrc-pon.RDS") # 
 str(pon_hg19)
 # extract from COSMIC likelihood of the gene to be mutated and the mutation to be the same position as the mutation list
@@ -96,6 +104,7 @@ for (i in 1:dim(no)[2]){
 # sum(ponP==0)/61860: 18.8% of the positions have always zeros for all subjects in the PON
 
 # CRUK patient samples ##########################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsC <- list.files("~/genomedk/PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "bait.pileup")
 countsC0 <-  piles_to_counts(files = pileupsC[1:90], 
 #countsC0 <-  piles_to_counts(files = pileupsC[1:8], 
@@ -137,6 +146,7 @@ for (i in 1:dim(mafsC1)[1]) {
 plot(sc1C)
 plot(sc2C)
 #IMPROVE get the dates of OP
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 It <- read.table("~/genomedk/matovanalysis/umiseq_analysis/IMPROVEptList",header = TRUE)
 table(It$op_time_cat)
 tbI <- table(It$op_time_cat,It$pt_id)
@@ -145,12 +155,15 @@ tbI[2,] # postOP(14)
 tbI[3,] # postOP(30)
 It[,3] # IDs 
 # CRUK samples #################################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsC <- list.files("~/genomedk/PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "bait.pileup")
 #countsIpre <-  piles_to_counts(files = pileupsC[9:90], 
                               countsIpre <-  piles_to_counts(files = pileupsC[1:8], 
                              regions = pon_hg19$regions)
 # IMPROVE samples #################################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsI <- list.files("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/N227", recursive = T, full.names = T, pattern = "bait.pileup")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 It <- read.table("~/genomedk/matovanalysis/umiseq_analysis/IMPROVEptList",header = TRUE)
 It$index <- sapply(as.character(It$library_id), function(x) grep(x, pileupsI)) # 141 of 179
 preop_index <- It[ It$op_time_cat == -1, "index"] # 57
@@ -226,6 +239,7 @@ plot(erI1)
 mean(erI1)
 
 # QIAGEN healthy samples ############################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
 countsQ0 <-  piles_to_counts(files = pileupsQ, 
                             regions = pon_hg19$regions)
@@ -282,6 +296,7 @@ plot(log2(sc111Q), ylim=range(c(r1,r2)), col="blue", pch = 18)
 # DS samples ##################################################################################################
 dat0 <- readRDS("sw_output_files/2020-10-23-145546_sw-output.RDS")  
 pileupsD <- unlist(attributes(dat0))
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsD <- sub("/faststorage/project/PolyA/BACKUP", "~/genomedk/PolyA/faststorage/BACKUP", pileupsD)
 all(file.exists(pileupsD))
 countsD <-  piles_to_counts(files = pileupsD, 

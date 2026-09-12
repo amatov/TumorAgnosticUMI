@@ -1,3 +1,4 @@
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 setwd("~/genomedk/matovanalysis/umiseq_analysis/test_fragpos/")
 raw <- read.table("out.txt", sep = "\t", header = F) #Read data
 raw[1:10, 1:10] #Take a look at a corner of the data - first 3 columns are annotation (chr, pos, base)
@@ -8,6 +9,7 @@ raw[1000:1020, c(1:3,150:180)]
 apply(raw[,-c(1:3)], 1, sum)
 
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 raw <- read.table("~/genomedk/projects/test/pon38/Donor294_cfdna_N140_1504_consensus.txt", sep = "\t", header = F) #Read data
 
 raw[1:10, 4:14] #Take a look at a corner of the data - first 3 columns are annotation (chr, pos, base)

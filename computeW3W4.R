@@ -1,6 +1,7 @@
 library("dplyr")
 
 # compute W4
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 PON <- list.files("~/genomedk/projects/test/pon38", recursive = T, full.names = T, pattern = "txt")
 
 PON_m = array(0, dim=c(length(PON)-1,72376/4,699))
@@ -82,6 +83,7 @@ for (i in 1:length(list)){
   VEC[list[i]]  
 }
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 CRUKtest1 <- list.files("~/genomedk/matovanalysis/umiseq_analysis/CRUK_W3W4_CRC226", recursive = T, full.names = T, pattern = "txt")
 CRUK1 <- read.table(CRUKtest1[1], header = F)  
 

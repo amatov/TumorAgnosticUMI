@@ -1,0 +1,45 @@
+Tumor-Agnostic UMI Analysis - License and Usage Notice
+=========================================================
+
+Copyright (c) Alexandre Matov. All rights reserved except as granted below.
+
+1. Scope
+--------
+This repository contains R and Python analysis code written by Alexandre
+Matov for detecting colorectal neoplasm from ultra-deep targeted
+sequencing data (the "tumor-agnostic UMI-seq" approach). Several scripts
+call R packages (e.g. Bioconductor's deepSNV and shearwater) and personal
+utility scripts (e.g. tools.R, sw_piles.R, duplex_tools.R,
+recoder.R/auc.R/scaler.R/confusion_plot.R from a separate
+"utility_functions" collection) that are NOT included in this repository
+-- see README.md and DEPENDENCIES.md for details.
+
+2. Permitted use
+-----------------
+Permission is granted to use, copy, and modify this code free of charge
+for research and educational purposes, provided that:
+
+  a) Any resulting publication, presentation, or derivative work cites
+     the relevant publication(s) referenced in README.md;
+  b) This notice is retained in copies or substantial portions of the
+     code.
+
+Commercial use, redistribution, or incorporation into a commercial
+product or service requires prior written permission from Alexandre Matov
+(alexandre.matov@gmail.com).
+
+3. No warranty
+---------------
+This software is provided "as is", without warranty of any kind, express
+or implied, including but not limited to the warranties of
+merchantability, fitness for a particular purpose, and noninfringement.
+In no event shall the author be liable for any claim, damages, or other
+liability arising from the use of this software.
+
+4. Data files
+--------------
+`data/IMPROVEptList` and `data/201123_wes-spora-mutations-improve.csv`
+contain patient-identifier-linked mutation/sample data from the IMPROVE
+clinical trial cohort, included here as part of the research record
+associated with the publication(s) cited in README.md. Any reuse of these
+specific data files should also cite that publication.

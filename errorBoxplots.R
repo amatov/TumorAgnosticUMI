@@ -1,3 +1,4 @@
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
 countsQ00 <-  piles_to_counts(files = pileupsQ, 
                              regions = pon_hg19$regions)
@@ -6,6 +7,7 @@ countsQ[1:16,,] <- countsQ00[1:16,,]
 countsQ[17:22,,]<-countsQ00[19:24,,]
 counts <- countsQ
 ############################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
 #pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 45
 pon_counts <- pon_obj2[["pon"]]
@@ -22,6 +24,7 @@ mafs <- abind::abind(
 )
 #Indeces of the IDSNPs
 coordinates <- pon$coordinates
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 regions <- read.table("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/sporacrcv1_bed/NEW_METHOD_hg19_08feb2016_capture_targets.bed")
 #This is slow ~2 min O ~ n² (but works)
 i <-

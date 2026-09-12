@@ -1,8 +1,10 @@
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R") #1/0 list
 setwd ('~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis')
 source("sw_input_files/duplex_tools.R")
 library("dplyr")
 library("ggpubr")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon_hg19 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/call/references/200419_novaseq-xgen-sporacrc-pon.RDS") # 
 
 f3 <- function(a, M, S){
@@ -14,6 +16,7 @@ indP = c(1598,2207,5434,8551,9245,11243,12551,13815,18170,18937,21378,21687,2804
 #indP = c(1029,1638,4717, 7834, 9768, 11594, 18341, 27868, 33302, 35174, 40763, 42504, 42803, 42898, 43655, 43797, 43801, 43810, 46627, 46631, 47168, 54718, 58832)
 VAFcut = 0.35
 # 45 Subjects of the Control Panel of Normal PON ####################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
 # pon_obj2 <- readRDS("sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 45 subjects only, 1 is missing
 pon_counts <- pon_obj2[["pon"]]
@@ -137,6 +140,7 @@ erPQ <- list(Int3=c(erQ1[qAge>60 & qAge<71],erP1[PON11$age>60 & PON11$age<71]),
 boxplot(erPQ,notch = TRUE,horizontal = TRUE,border = "brown",col = c("brown","blue","green"))
 
 # QIAGEN healthy samples ############################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
 countsQ00 <-  piles_to_counts(files = pileupsQ, 
                               regions = pon_hg19$regions)
@@ -167,6 +171,7 @@ print(erQ1)
 
 
 ### IMPROVE #####
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsI <- list.files("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/N227", recursive = T, full.names = T, pattern = "bait.pileup$")
 countsI0 <-  piles_to_counts(files = pileupsI[1:213], # DEC 8 noon, there are 61 IMPROVE files.
                              regions = pon_hg19$regions)
@@ -187,6 +192,7 @@ for (i in 1:dim(countsI1)[1]) {
 }
 plot(erI1)
 # CRUK patient samples ##########################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsC <- list.files("~/genomedk/PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "bait.pileup")
 countsC0 <-  piles_to_counts(files = pileupsC[1:90], #pileupsC[listCRUK], #, 
                              regions = pon_hg19$regions)
@@ -209,6 +215,7 @@ plot(erCH1)
 # DS samples ##################################################################################################
 dat0 <- readRDS("sw_output_files/2020-10-23-145546_sw-output.RDS")  
 pileupsD <- unlist(attributes(dat0))
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsD <- sub("/faststorage/project/PolyA/BACKUP", "~/genomedk/PolyA/faststorage/BACKUP", pileupsD)
 all(file.exists(pileupsD))
 countsD <-  piles_to_counts(files = pileupsD, 

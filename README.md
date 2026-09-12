@@ -1,5 +1,45 @@
 #### A Tumor-Agnostic Approach for Detection of Colorectal Neoplasm in Ultra-Deep Targeted Sequencing of a Narrow Subset of the Genome
 
+## Quick start
+
+1. **Requirements:** R with the packages listed in
+   [DEPENDENCIES.md](DEPENDENCIES.md) (Bioconductor's `deepSNV`/
+   `shearwater` for variant calling, plus ~29 CRAN/Bioconductor packages
+   used across the analysis scripts), and Python with `pysam`/`numpy`/
+   `gwf` for the fragment-length extraction step.
+2. **This is analysis code developed on a private HPC cluster**
+   (Aarhus University's GenomeDK), not a packaged, portable pipeline.
+   Every script contains hardcoded absolute paths to that cluster's
+   filesystem (`~/genomedk/...`) or the author's local machine -- each
+   such line is now flagged with an `# EDIT:` comment so you can find and
+   update them before running. See "Repository contents" below.
+3. **`workflow.py`** shows the intended data-processing order: it runs
+   `UMI_seq_fragment_length.py` (fragment-length extraction from
+   consensus BAM files against `data/NEW_METHOD_hg38_08feb2016_capture_targets.bed`)
+   as a `gwf` cluster workflow. The various `.R` scripts (`fileInput.R`,
+   `readWes*.R`, `blacklisting.R`, `mahalanobis*.R`, `errorRates.R`, etc.)
+   perform the downstream statistical analysis and scoring described
+   below.
+4. **Some required files are not included in this repository** (a few
+   personal utility scripts sourced by the analysis code) -- see
+   DEPENDENCIES.md for the full list and what to do about it.
+
+## Repository contents
+
+- **`data/`** -- the bundled data files that were previously in the repo
+  root (`IMPROVEptList`, the WES mutation CSV, the capture-panel BED
+  file). Note that most scripts reference these via their original
+  GenomeDK cluster paths, not this local copy -- see the `# EDIT:`
+  comments if you want a script to use the local copy instead.
+- **`figures/`** -- supplementary image(s).
+- **R analysis scripts** -- each is a standalone script (not a
+  package/function library), meant to be run interactively / edited
+  per-analysis rather than executed end-to-end as a pipeline.
+- **`workflow.py` / `UMI_seq_fragment_length.py`** -- the Python side,
+  for extracting fragment-length data from BAM files via a `gwf` cluster
+  workflow.
+- **License:** see [LICENSE](LICENSE) -- research/educational use.
+
 #### I developed a tumor-agnostic approach for the detection of colorectal neoplasm based on the DNA fragment length distribution on- and off-panel. Tumors exhibit clonal architecture with multiple mutations present in a subset of the tumor cell population. Sub-clonal mutations provide key insights into tumor evolution and sub-clonal variants can be detected using the deep coverage (over 10,000x) of next-generation sequencing (NGS) data, but their distinction from sequencing errors, library preparation and alignment artifacts depend on the noise level. 
 
 ##### We perform variant calling via a package available at Bioconductor, which provides quantitative detection of sub-clonal mutations in ultra-deep sequencing data. The deepSNV algorithm is used for a comparative setup with a control experiment of the same loci and uses a beta-binomial model as well as a likelihood ratio test to discriminate sequencing errors and sub-clonal SNVs. The shearwater (SW) algorithm computes a Bayes classifier based on a beta-binomial model for variant calling with multiple samples for precisely estimating the detection error rates and the variance dispersion using prior knowledge, such as variation data from the COSMIC database. It computes a model based on the coverage, error rate, and a dispersion factor. The determination of statistical significance is made by comparing the expected number of nucleotide counts per read with the stringency level of the selected cut-off value based on computing a posterior probability as a function of a Bayesian factor. 

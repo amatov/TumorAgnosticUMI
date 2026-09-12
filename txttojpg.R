@@ -1,5 +1,6 @@
 library("imager")
 # UMICRUK
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsUC <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/divergence/data/CRUK5Mb", recursive = T, full.names = T, pattern = "tsv")
 umic<-vector()
 nbUMIC <- length(pileupsUC)

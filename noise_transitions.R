@@ -8,10 +8,15 @@ library(reshape2)
 #setwd ('G:\\PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis')
 setwd ('~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis')
 library(ROCR)
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("U:\\Documents/R/utility_functions-master/recoder.R")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("U:\\Documents/R/utility_functions-master/auc.R")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("U:\\Documents/R/utility_functions-master/scaler.R")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("U:\\Documents/R/utility_functions-master/confusion_plot.R")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("G:\\PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_piles.R")
 source("sw_input_files/duplex_tools.R")
 library("dplyr")
@@ -19,8 +24,10 @@ library("tidyr")
 library("ggplot2")
 library(qlcMatrix) 
 library(FactoMineR)
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/R/read_bed.R")
 ############################################################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon_hg19 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/call/references/200419_novaseq-xgen-sporacrc-pon.RDS") # 
 str(pon_hg19)
 # 45 Subjects of the Control Panel of Normal PON
@@ -29,6 +36,7 @@ pon_counts <- pon_obj2[["pon"]]
 str(pon_obj2)
 no = pon_counts[,,1:4]+pon_counts[,,6:9] # no = pon_counts[,,1:5]+pon_counts[,,6:10]
 # QIAGEN control 24 samples HG19 ################################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
 all(file.exists(pileupsQ))
 countsQ <-  piles_to_counts(files = pileupsQ, 
@@ -78,6 +86,7 @@ plot(sort(mfl[mfl>0], decreasing = TRUE))
 plot(sort(mf[mf>0], decreasing = TRUE))
 
 # CRUK control 8 samples #################################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsC <- list.files("~/genomedk/PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "bait.pileup")
 countsC <-  piles_to_counts(files = pileupsC[1:8], 
                             regions = pon_hg19$regions)
@@ -86,6 +95,7 @@ countsC1 <- countsC[,,1:4] + countsC[,,6:9]# counts for the 24 Qiagen samples
 # Eight Panels of Dilution Series###########################################################################################
 dat0 <- readRDS("sw_output_files/2020-10-23-145546_sw-output.RDS") # DS SW output hg38
 pileupsD <- unlist(attributes(dat0))
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsD <- sub("/faststorage/project/PolyA/BACKUP", "~/genomedk/PolyA/faststorage/BACKUP", pileupsD)
 all(file.exists(pileupsD))
 counts <-  piles_to_counts(files = pileupsD, 
@@ -226,6 +236,7 @@ setwd ('U:\\Documents/R')
 library(xlsx)
 #write.xlsx(x, file, sheetName="Sheet1")
 #write.csv(Your DataFrame,"Path where you'd like to export the DataFrame\\File Name.csv", row.names = FALSE)
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 write.csv(res, "U:\\Documents/R/PON_transitions.csv",na="NA",row.names=TRUE)
 
 

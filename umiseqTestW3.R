@@ -1,16 +1,22 @@
 library("dplyr")
 library("glmnet")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R") #1/0 list
 library("ggplot2")
 library("precrec")
 library("ROCit")
 # add new flags; number of fragments, age, gender, concentration, 10 flags
 library(GenomicRanges)
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/tools.R")
 #################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 w3_files <- list.files("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb", recursive = T, full.names = T, pattern = "_consensus.txt")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 W3_N289_70 <- read.table("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb/N289-70.txt", header = T)  
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 W3_N289_85 <- read.table("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb/C44A06969D_cfdna_N289_85_consensus.txt")#, header = T)  
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 W3_N289_58 <- read.table("~/genomedk/matovanalysis/umiseq_analysis/CRUK5Mb/C47A07007D_cfdna_N289_58_consensus.txt")#, header = T)  
 w3 <- W3_N289_58[,3:702] #mean(unlist(w3)) 0.007291663
 
@@ -49,9 +55,11 @@ for (i in 1:length(w32)){
   
 }
 ############################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 countsW <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cruki.RDS") # 
 
 # 45 Subjects of the Control Panel of Normal PON ####################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/reference/201217_hg38-novaseq-xgen-sporacrc-pon.RDS") # 46
 pon_counts <- pon_obj2[["pon"]]
 no0 = array(0, dim=c(dim(pon_counts)[1]-1,dim(pon_counts)[2],dim(pon_counts)[3]))
@@ -74,12 +82,15 @@ v1[ v1 == 0 ] <- 1E-5
 # PON mutations and variability ###################################################################################
 sitemut <- t(apply(pon_obj2$coordinates, 1, function(x){
   paste( paste0(trimws(x[1]), ":", trimws(x[2]), "_"),
+         # EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
          paste(x[3] ,c("A", "T", "C", "G"), sep = "/"),
          sep = "")}))
 ########################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 prior0 <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cosmic-prior.RDS") # 
 
 # cruk plasma data ##################################################################################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 countsC00 <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cruk-counts.RDS") # 
 countsC001 <- countsC00[,,1:4] + countsC00[,,6:9]
 mafsC = array(0, dim=c(dim(countsC001)[1],dim(countsC001)[2],dim(countsC001)[3]))

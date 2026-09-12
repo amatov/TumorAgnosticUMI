@@ -1,8 +1,10 @@
 #counts array, genome version taken cared of
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 cruk <- readRDS("~/genomedk/matovanalysis/umiseq_analysis/R/cruk-counts.RDS") # 
 dimnames(cruk)[[1]] #The pileup names are the first dim
 
 #sample and patient info incl the pileup names
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 info <- read.table("~/genomedk/matovanalysis/umiseq_analysis/R/cruk-plasma-info.lst", header = T, stringsAsFactors = F)
 names(info)
 head(info)
@@ -45,6 +47,7 @@ cancer_SNPs <- tmp[!is.na(tmp$sitemut_hg38), ]
 #If /path/to/sample/output/pileup then /path/to/sample/param.json
 #If want to access param.json locally you need change the paths - I need to change
 #"/faststorage/project" to "~/genomedk/gdk-projects" like this:
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 tmp <- sub("/faststorage/project", "~/genomedk/gdk-projects", info$pileup)
 all(file.exists(tmp)) #check that you can find the file (should be TRUE)
 
@@ -58,7 +61,9 @@ all(file.exists(params)) #Check!
 info$version <- sapply(params, function(p) gsub(".+((hg19)|(hg38)).+", "\\1", tolower(jsonlite::read_json(p)$reference$reference)), USE.NAMES = F)
 info$version <- sapply(params, function(x)sub(".+((hg19)|(hg38)).+", "\\1", paste(readLines(x), collapse = "")), USE.NAMES = F)
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 cruk <- readRDS("~/projects/pileup/specs/data/cruk-counts.RDS")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 info <- read.table("~/projects/pileup/specs/data/cruk-plasma-info.lst",
                    header = T, stringsAsFactors = F)
 
@@ -75,11 +80,13 @@ dim(cruki)
 dimnames(cruki)
 
 #Sitemut panel in the "chr:pos_ref/alt" format
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon <- readRDS("~/genomedk/IMPROVE/call/references/201217_hg38-novaseq-xgen-sporacrc-pon.RDS")
 
 sitemut_panel <-
   t(apply(pon$coordinates, 1, function(x){
     paste( paste0(trimws(x[1]), ":", trimws(x[2]), "_",
+                  # EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
                   trimws(x[3]), "/", dimnames(cruki)[[3]]))}))
 
 #The index of, say, info$sitemut_hg38[100], in every 18094*4 matrix
@@ -113,6 +120,7 @@ sum(cruki[56, , ]) == 2
 i0 <- which(sitemut_panel == c("chr5:112838934_C/T"), arr.ind = T)
 cruki[56, , ][(i0[1]-5):(i0[1]+5), ]
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 saveRDS(cruki, "~/tmp/cruki.RDS")
 
 cancer_SNPs

@@ -19,13 +19,16 @@ setwd ('~/genomedk/DELFI_data/Derived/fragment_length_in_bins')
 require("reticulate")
 py_install("pandas")
 py_install("https://github.com/Hogfeldt/ctDNAtool")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source_python("~/genomedk/matovanalysis/DELFI_analysis/python/pickle_reader.py")
 #pickle_data <- read_pickle_file("~/genomedk/DELFI2/Workspaces/per_and_elias/delfi2_length_5Mbp/DL000978HLQ0_100AM.pickle")
 ##excel_sheets(path = "~/genomedk/DELFI2/RawData/201217_Delfi2_fastq_and_sample_manifest_updated_batchinfo.xlsx")
 
 #del2 <- read_excel("~/genomedk/DELFI2/RawData/201217_Delfi2_fastq_and_sample_manifest_updated_batchinfo.xlsx", sheet = 1) 
 #end2 <- read_excel("~/genomedk/DELFI2/RawData/201217_Delfi2_fastq_and_sample_manifest_updated_batchinfo.xlsx", sheet = 2)# 1069 samples: 169 colon, 100 rectum, 800 control.
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 del2 <- read_excel("~/genomedk/DELFI2/Workspaces/matov/201217_Delfi2_fastq_and_sample_manifest_updated_batchinfo2.xlsx", sheet = 1) 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 end2 <- read_excel("~/genomedk/DELFI2/Workspaces/matov/201217_Delfi2_fastq_and_sample_manifest_updated_batchinfo2.xlsx", sheet = 2)# 1069 samples: 169 colon, 100 rectum, 800 control.
 
 col_list <- which(end2$diagnostic_group=="Colon cancer") # 169 samples
@@ -168,7 +171,9 @@ m2$DELFI.ID[col_list2] # 79
 #[64] "DL001270CRP0"   "DL001316CRP0"   "DL001562CRP0"   "DL001178CRP0"   "DL001572CRP0"   "DL001843CRP0"   "DL001843CRP0_1" "DL001964CRP0"   "DL001964CRP0_1"
 #[73] "DL001763CRP0"   "DL001650CRP0"   "DL001965CRP0"   "DL002190CRP0_1" "DL002190CRP0"   "DL001793CRP0"   "DL001480CRP0"  
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsD2 <- list.files("~/genomedk/DELFI2/Workspaces/per_and_elias/delfi2_length_5Mbp", recursive = T, full.names = T, pattern = "tsv")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsD2_1M <- list.files("~/genomedk/DELFI2/Workspaces/per_and_elias/delfi2_length_1Mbp", recursive = T, full.names = T, pattern = "tsv")
 
 d2_test <- read.table(pileupsD2[204], header = TRUE)
@@ -1196,6 +1201,7 @@ plot(abs(fft(kd2_rec50, inverse = FALSE)))
 
 #bFr <- read.delim("filtered_window_data_5MB_1_700_m5000.txt")
 #bf <- read.table("filtered_window_data_5MB_1_700_m5000.txt")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 bFr <- read.table("~/genomedk/DELFI_data/Derived/fragment_length_in_bins/filtered_window_data_5MB_1_700_m5000.txt", header = TRUE)
 typeof(bFr) # list
 #lookUp <- read.table("5MB_map_file.txt")
@@ -1209,6 +1215,7 @@ hist(s2[s2>100])
 
 #sL <- read.csv("U:\\Documents/R/delfi_scripts-master/sample_reference.csv")
 #sL <- read.csv("~/genomedk/matovanalysis/DELFI_analysis/R/sample_reference.csv")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 sL <- read.csv("~/genomedk/DELFI_data/sample_reference.csv")
 
 iL <- sL[sL[,6]=="Lung Cancer",3] # list  
@@ -1391,6 +1398,7 @@ for(i in 1:nbOVC) {
 
 
 # UMIIMPROVE
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsUI <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/divergence/data/57PRE5Mb", recursive = T, full.names = T, pattern = "tsv")
 nbUMII <- length(pileupsUI)
 umiiD2 <- array(0,c(nbUMII,595,499))
@@ -1436,6 +1444,7 @@ hist(testU2[364,], breaks = 150, ylim = c(0, 10))
 hist(umii[,364], breaks = 150, ylim = c(0, 200))# dense up to 200 on x axis
 hist(umii[,198], breaks = 150, ylim = c(0, 200))# dense up to 500 on x axis
 # UMICRUK
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsUC <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/divergence/data/CRUK5Mb", recursive = T, full.names = T, pattern = "tsv")
 umic<-vector()
 nbUMIC <- length(pileupsUC)
@@ -1460,9 +1469,11 @@ for(i in 1:nbUMIC) {
 }
 dim(umic) # 40460 x 499 for  68 CRUK PreOps
 #UMISEQ
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 auxFR <- read.table( "~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/divergence/data/length_matrix1.tsv", header = TRUE) # sample per sample, file per file. 
 #testS <- as.integer(unlist(auxFR[,2:500]))
 #testS2 <- matrix(testS, ncol = dim(auxFR)[1], byrow = (dim(auxFR)[2]-2)) # convert back to matrix form
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsU <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/divergence/data/45PON5Mb", recursive = T, full.names = T, pattern = "tsv")
 nbUMI <- length(pileupsU)
 umiD2 <- array(0,c(nbUMI,595,499))
@@ -1884,19 +1895,26 @@ plot(k_umiiPre56_b10)
 listCRUK <- unlist(sapply(CRUKlist, function(x) grep(x, x = pileupsC [9:90])))
 bams <-pileupsC[listCRUK ]
 #bams <- list.files(pileupsC)
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsC_Bam <- list.files("~/genomedk/PolyA/faststorage/BACKUP/CRUK/plasma/N289", recursive = T, full.names = T, pattern = "_consensus.sort.bam$")
 listCRUK_umi <- unlist(sapply(names(listCRUK), function(x) grep(x, x = pileupsC_Bam)))
 bams <-pileupsC_Bam[listCRUK_umi ]
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 sapply(bams, function(x)file.copy(from=x, to = "~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/divergence/data/CRUK5Mb/"))
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsI_Bam <- list.files("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/pon/data/pon", recursive = T, full.names = T, pattern = "_consensus.sort.bam$")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 sapply(pileupsI_Bam[1:46], function(x)file.copy(from=x, to = "~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/divergence/data/45PON5Mb/"))
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 It <- read.table("~/genomedk/matovanalysis/umiseq_analysis/IMPROVEptList",header = TRUE)
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsIM_Bam <- list.files("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/sporacrc/N227", recursive = T, full.names = T, pattern = "_consensus.sort.bam$")
 It$index <- sapply(as.character(It$library_id), function(x) grep(x, pileupsIM_Bam)) 
 preop_index <- unlist(It[ It$op_time_cat == -1, "index"]) # 56
 pileupsIM_Bam[preop_index]
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 sapply(pileupsIM_Bam[preop_index], function(x)file.copy(from=x, to = "~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/umiseq_paper/divergence/data/57PRE5Mb/"))
 
 
@@ -1904,6 +1922,7 @@ sapply(pileupsIM_Bam[preop_index], function(x)file.copy(from=x, to = "~/genomedk
        
        
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsD1 <- list.files("~/genomedk/DELFI1/Workspaces/maretty/frag_lens/5mb", recursive = T, full.names = T, pattern = "tsv")
 
 listD1CRC27 <- sapply(iC, function(x) grep(x, x = pileupsD1 ))

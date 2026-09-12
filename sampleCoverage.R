@@ -1,6 +1,8 @@
 library("ggplot2")
 library("gplots")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon_hg19 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/IMPROVE/call/references/200419_novaseq-xgen-sporacrc-pon.RDS") # 
 str(pon_hg19)
 # 45 Subjects of the Control Panel of Normal PON

@@ -17,7 +17,9 @@ print(bam_files)
 
 output_dir = "."
 
-bed_file = "NEW_METHOD_hg38_08feb2016_capture_targets.bed"
+# NOTE: path updated to data/ when this repo's bundled data files were
+# moved out of the repo root; was: "NEW_METHOD_hg38_08feb2016_capture_targets.bed"
+bed_file = "data/NEW_METHOD_hg38_08feb2016_capture_targets.bed"
 for bam in bam_files:
     bam_id = bam.split("/")[-1].split(".")[0].replace("-","_")
     output = join(output_dir, f"{bam_id}.txt")

@@ -5,6 +5,7 @@
 # raw <- read.table("C16A07111D_cfdna_N289_70_consensus.txt", sep = "\t", header = F) #Read data
 
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 cruk_files <- readLines("~/genomedk/matovanalysis/umiseq_analysis/R/cruk-pileups.lst") 
 
 #Problems with some cruk bam files that are still only mapped top HG19 - we will only use the hg38s
@@ -26,6 +27,7 @@ hg38_libids <- sub(".*(N[[:digit:]]+-[[:digit:]]+).*", "\\1", hg38)
 
 # Select a few samples from manifest that can be used for W3-4 development (These should be hg38)
 #This is manifest with sample informations
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 manifest <- read.table("~/genomedk/matovanalysis/umiseq_analysis/R/cruk-manifest.csv", header = T, sep = " ", stringsAsFactors = F)
 
 table(manifest$sample_type)
@@ -85,6 +87,7 @@ data[,,5][1:4,150:175]
 
 
 #Which are references  (those with many reads)
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 positions <- read.table("~/genomedk/PolyA/faststorage/BACKUP/CRUK/references/200504_sporacrc-coordinates-hg3819.tab", header = T)
 head(positions)
 

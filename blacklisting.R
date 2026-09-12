@@ -1,7 +1,11 @@
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/matovanalysis/umiseq_analysis/R/read_bed.R") #1/0 list
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/matovanalysis/umiseq_analysis/R/cmapply.R")
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 source("~/genomedk/matovanalysis/umiseq_analysis/R/image_plot.R")
 #pon <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon_obj2 <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
 pon_counts <- pon_obj2[["pon"]]
 inRef <- t(sapply(dimnames(pon_counts)[[2]], function(b) c("A", "T", "C", "G") %in% b))
@@ -28,6 +32,7 @@ for (i in 1:dim(no)[1]) {
   mafsP2[i,,] <- data.matrix(p1)
 }
 ######################################
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pileupsQ <- list.files("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/qiagen_kit_test/201019", recursive = T, full.names = T, pattern = "bait.pileup")
 countsQ0 <-  piles_to_counts(files = pileupsQ, 
                              regions = pon_hg19$regions)
@@ -122,6 +127,7 @@ length(mafs)
 
 print(df)
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 write.table(df, "~/genomedk/matovanalysis/umiseq_analysis/blacklisting.cvs", row.names = F)
 
 image_plot(data = log10(df[,2:ncol(df)]+1),
@@ -132,6 +138,7 @@ image_plot(data = log10(df[,2:ncol(df)]+1),
            xlab = names(df)[2:ncol(df)])
 dev.off()
 
+# EDIT: hardcoded path below is specific to the original author's local/cluster filesystem -- update before running
 pon <- readRDS("~/genomedk/PolyA/faststorage/BACKUP/N140_Targeting/specs/specs_analysis/sw_input_files/201020_hg38-novaseq-xgen-sporacrc-pon.RDS") # 
 data <- pon$pon
 #Turn into 18094*5*46 arrays
