@@ -1,4 +1,4 @@
-## TumorAgnosticUMI
+## Tumor Agnostic UMI
 
 A tumor-agnostic approach for detection of colorectal neoplasm in ultra-deep targeted sequencing of a narrow subset of the genome.
 
