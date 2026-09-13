@@ -24,9 +24,9 @@ A tumor-agnostic approach for detection of colorectal neoplasm in ultra-deep tar
 - **`data/`** -- `IMPROVEptList`, the WES mutation CSV, the capture-panel
   BED file.
 - **`figures/`** -- supplementary image(s).
-- **R analysis scripts** -- each is a standalone script (not a
-  package/function library), meant to be run interactively / edited
-  per-analysis rather than executed end-to-end as a pipeline.
+- **R analysis scripts** -- each is a standalone script, meant to be run
+  interactively / edited per-analysis rather than executed end-to-end as
+  a pipeline.
 - **`workflow.py` / `UMI_seq_fragment_length.py`** -- the Python side,
   for extracting fragment-length data from BAM files via a `gwf` cluster
   workflow.
