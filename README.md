@@ -21,11 +21,8 @@ A tumor-agnostic approach for detection of colorectal neoplasm in ultra-deep tar
 
 ## Repository contents
 
-- **`data/`** -- the bundled data files that were previously in the repo
-  root (`IMPROVEptList`, the WES mutation CSV, the capture-panel BED
-  file). Note that most scripts reference these via their original
-  GenomeDK cluster paths, not this local copy -- see the `# EDIT:`
-  comments if you want a script to use the local copy instead.
+- **`data/`** -- `IMPROVEptList`, the WES mutation CSV, the capture-panel
+  BED file.
 - **`figures/`** -- supplementary image(s).
 - **R analysis scripts** -- each is a standalone script (not a
   package/function library), meant to be run interactively / edited
