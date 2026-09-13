@@ -1,4 +1,6 @@
-### A Tumor-Agnostic Approach for Detection of Colorectal Neoplasm in Ultra-Deep Targeted Sequencing of a Narrow Subset of the Genome
+## TumorAgnosticUMI
+
+A Tumor-Agnostic Approach for Detection of Colorectal Neoplasm in Ultra-Deep Targeted Sequencing of a Narrow Subset of the Genome.
 
 ## Quick start
 
