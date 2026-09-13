@@ -9,8 +9,8 @@ A tumor-agnostic approach for detection of colorectal neoplasm in ultra-deep tar
    `shearwater` for variant calling, plus ~29 CRAN/Bioconductor packages
    used across the analysis scripts), and Python with `pysam`/`numpy`/
    `gwf` for the fragment-length extraction step.
-2. **This is analysis code developed on a private HPC cluster**
-   (Aarhus University's GenomeDK).
+2. **This is analysis code developed on Aarhus University's GenomeDK,**
+   a powerful computational cluster.
 3. **`workflow.py`** shows the intended data-processing order: it runs
    `UMI_seq_fragment_length.py` (fragment-length extraction from
    consensus BAM files against `data/NEW_METHOD_hg38_08feb2016_capture_targets.bed`)
