@@ -18,9 +18,6 @@ A tumor-agnostic approach for detection of colorectal neoplasm in ultra-deep tar
    `readWes*.R`, `blacklisting.R`, `mahalanobis*.R`, `errorRates.R`, etc.)
    perform the downstream statistical analysis and scoring described
    below.
-4. **Some required files are not included in this repository** (a few
-   personal utility scripts sourced by the analysis code) -- see
-   DEPENDENCIES.md for the full list and what to do about it.
 
 ## Repository contents
 
